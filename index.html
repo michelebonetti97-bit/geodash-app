@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoDash Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f4cc.png">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+        :root {
+            --primary: #10b981;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --bg-main: #000000;
+            --bg-card: #111827;
+            --border: #374151;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: sans-serif; padding-bottom: 50px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px; }
+        .header h1 { font-size: 24px; color: var(--primary); display: flex; align-items: center; gap: 15px; }
+        
+        .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: #1f2937; color: var(--text-muted); display: flex; align-items: center; gap: 6px; height: fit-content; border: 1px solid var(--border);}
+        .cloud-status.online::before { content: ''; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; display: inline-block; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); overflow-x: auto;}
+        .tab { padding: 10px 20px; color: var(--text-muted); cursor: pointer; border:none; background:none; border-bottom: 2px solid transparent; font-weight: 600; white-space: nowrap; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 1.5rem; }
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); }
+        .card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+        .card .value { font-size: 24px; font-weight: 700; }
+        .card .sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .tax-expansion { 
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 2rem; margin-bottom: 2rem; border-left: 4px solid var(--accent);
+        }
+        .tax-title { font-size: 18px; font-weight: 700; margin-bottom: 1.5rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
+        .tax-grid-detailed { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; }
+        .tax-group h4 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .tax-item { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #1f2937; }
+        .tax-item.total-row { border-top: 1px solid var(--border); border-bottom: none; font-weight: 700; margin-top: 10px; padding-top: 15px; font-size: 16px; }
+        .tax-val { font-family: monospace; font-size: 15px; }
+        .negative { color: var(--danger); }
+        .positive { color: var(--primary); }
+
+        .charts-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+        .chart-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+
+        .table-container { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 950px; }
+        th { background: #1f2937; padding: 12px; text-align: left; color: var(--text-muted); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .badge-trasferta { background: #064e3b; color: #6ee7b7; }
+        .badge-ufficio { background: #1e3a8a; color: #93c5fd; }
+
+        .ore-badge { font-family: monospace; font-size: 13px; color: var(--accent); font-weight: 700; }
+        .paga-oraria-badge { font-family: monospace; font-size: 13px; color: var(--secondary); }
+
+        .add-section { background: #1f2937; border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--primary); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+        .form-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .form-group { display: flex; flex-direction: column; }
+        input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #111827; color: white; outline: none; }
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; margin-top: 15px; }
+        .btn-archive { background: var(--secondary); color: white; }
+        .btn-danger { background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer;}
+        .btn-accent { background: var(--accent); color: black; }
+        
+        .ore-summary { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--secondary); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .ore-stat .ore-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+        .ore-stat .ore-value { font-size: 22px; font-weight: 700; color: var(--secondary); }
+        .ore-stat .ore-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+        .param-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .param-card { background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
+        .param-card h4 { margin-bottom: 15px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .param-card label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; margin-top: 15px; }
+
+        .archive-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        
+        .backup-section { margin-top: 25px; border-top: 1px dashed var(--border); padding-top: 20px; }
+        .backup-btn-group { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
+        .backup-btn-group .btn { flex: 1; min-width: 160px; text-align: center; }
+        .file-input-label { background: var(--secondary); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; text-align: center; display: inline-block; flex: 1; min-width: 160px;}
+        .hidden-file-input { display: none; }
+
+        @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>GeoDash <span style="font-weight:300">Pro</span> <div class="cloud-status online" id="status-badge">PWA Locale</div></h1>
+        <button class="btn btn-archive" onclick="archiveMonth()">ARCHIVIA MESE ATTUALE</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" id="tab-btn-current" onclick="switchTab('current')">Dashboard</button>
+        <button class="tab" id="tab-btn-archive" onclick="switchTab('archive')">Storico Archivio</button>
+        <button class="tab" id="tab-btn-params" onclick="switchTab('params')">Parametri e Backup</button>
+    </div>
+
+    <div id="section-current">
+        <div id="current-month-label" style="margin-bottom: 15px; font-weight: bold; color: var(--accent); text-transform: uppercase;">Visualizzazione: Mese Corrente</div>
+        
+        <div class="cards" id="summary-cards"></div>
+        <div class="ore-summary" id="ore-summary"></div>
+
+        <div class="tax-expansion">
+            <div class="tax-title">Dettaglio Analitico Tasse e Contributi <span id="tax-subtitle" style="font-size: 12px; color: var(--text-muted); font-weight: 400;"></span></div>
+            <div class="tax-grid-detailed" id="tax-details-expanded"></div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-box"><canvas id="barChart" height="180"></canvas></div>
+            <div class="chart-box"><canvas id="pieChart" height="180"></canvas></div>
+            <div class="chart-box"><canvas id="donutChart" height="180"></canvas></div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Località</th>
+                        <th>Tipo</th>
+                        <th>Orario</th>
+                        <th>Ore</th>
+                        <th>Fatturato</th>
+                        <th>Extra/BP</th>
+                        <th>Spese</th>
+                        <th>Tot Giornata</th>
+                        <th>€/ora</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="log-table"></tbody>
+            </table>
+        </div>
+
+        <div class="add-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <div class="form-label">Data</div>
+                    <input type="date" id="inp-data">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Località</div>
+                    <input type="text" id="inp-luogo" placeholder="Località">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Tipo</div>
+                    <select id="inp-tipo" onchange="updateDefaultExtra()">
+                        <option value="Trasferta">Trasferta</option>
+                        <option value="Ufficio">Ufficio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Ora Inizio</div>
+                    <input type="time" id="inp-ora-inizio" value="08:00">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Ora Fine</div>
+                    <input type="time" id="inp-ora-fine" value="17:00">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Compenso (€)</div>
+                    <input type="number" id="inp-compenso" value="105">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Extra/BP (€)</div>
+                    <input type="number" id="inp-extra" value="20">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Spese (€)</div>
+                    <input type="number" id="inp-spese" value="0">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addEntry()">AGGIUNGI GIORNATA</button>
+        </div>
+    </div>
+
+    <div id="section-archive" style="display:none"><div id="archive-list"></div></div>
+
+    <div id="section-params" style="display:none">
+        <div class="param-grid">
+            <div class="param-card">
+                <h4>Regime Forfettario</h4>
+                <label>Coefficiente Redditività (%)</label>
+                <input type="number" id="p-coeff" value="78" onchange="saveParams()">
+                <label>Aliquota Imposta (%)</label>
+                <input type="number" id="p-tasse" value="5" onchange="saveParams()">
+            </div>
+            <div class="param-card">
+                <h4>Previdenza CIPAG</h4>
+                <label>Soggettivo (%)</label>
+                <input type="number" id="p-cipag" value="12" step="0.1" onchange="saveParams()">
+                <label>Integrativo (%)</label>
+                <input type="number" id="p-integ" value="4" onchange="saveParams()">
+            </div>
+            <div class="param-card">
+                <h4>Costi Fissi</h4>
+                <label>Commercialista (€)</label>
+                <input type="number" id="p-comm" value="60" onchange="saveParams()">
+                <label>Ordine + Maternità (€)</label>
+                <input type="number" id="p-ordine" value="15.42" step="0.01" onchange="saveParams()">
+            </div>
+        </div>
+
+        <div class="param-card backup-section">
+            <h4 style="color: var(--accent);">Salvataggio & Backup Sicuro</h4>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">I tuoi dati sono salvati automaticamente nel browser di questo smartphone. Esporta periodicamente un file di backup per non rischiare di perderli o per spostarli su un altro dispositivo.</p>
+            <div class="backup-btn-group">
+                <button class="btn btn-accent" onclick="exportBackupData()">ESPORTA BACKUP (JSON)</button>
+                <label class="file-input-label">
+                    IMPORTA BACKUP
+                    <input type="file" class="hidden-file-input" id="import-file" accept=".json" onchange="importBackupData(event)">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let entries = [];
+let archive = [];
+let params = { coeff: 78, tasse: 5, cipag: 12, integ: 4, comm: 60, ordine: 15.42 };
+let viewName = "Mese Corrente";
+let charts = {};
+
+const FALLBACK_DATA = [
+  {data:"2026-04-01",luogo:"Scandiano zona industriale",tipo:"Trasferta",oraInizio:"08:00",oraFine:"17:00",compenso:105,extra:20,spese:9},
+  {data:"2026-04-03",luogo:"Ufficio",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:4.5}
+];
+
+function loadLocalData() {
+    try {
+        const localData = localStorage.getItem("geodash_pro_local_db");
+        if (localData) {
+            const parsed = JSON.parse(localData);
+            entries = parsed.entries || [];
+            archive = parsed.archive || [];
+            params = parsed.params || params;
+        } else {
+            entries = FALLBACK_DATA;
+            saveLocalData();
+        }
+        
+        document.getElementById('p-coeff').value = params.coeff;
+        document.getElementById('p-tasse').value = params.tasse;
+        document.getElementById('p-cipag').value = params.cipag;
+        document.getElementById('p-integ').value = params.integ;
+        document.getElementById('p-comm').value = params.comm;
+        document.getElementById('p-ordine').value = params.ordine;
+
+        updateStatusBadge("Dati Sincronizzati", true);
+        render();
+    } catch (e) {
+        console.error(e);
+        updateStatusBadge("Errore Memoria", false);
+    }
+}
+
+function saveLocalData() {
+    try {
+        const dataToSave = { entries, archive, params };
+        localStorage.setItem("geodash_pro_local_db", JSON.stringify(dataToSave));
+        updateStatusBadge("Dati Sincronizzati", true);
+    } catch (e) {
+        console.error(e);
+        updateStatusBadge("Memoria Piena!", false);
+    }
+}
+
+function updateStatusBadge(text, isOk) {
+    const badge = document.getElementById('status-badge');
+    badge.innerText = text;
+    if (isOk) badge.classList.add('online');
+    else badge.classList.remove('online');
+}
+
+function exportBackupData() {
+    const backupObj = { entries, archive, params, date: new Date().toISOString() };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+    const dlAnchorElem = document.createElement('a');
+    const today = new Date().toISOString().slice(0, 10);
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", `GeoDash_Backup_${today}.json`);
+    document.body.appendChild(dlAnchorElem);
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+}
+
+function importBackupData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if (imported.entries || imported.archive || imported.params) {
+                if (confirm("Attenzione! Caricando questo file sovrascriverai TUTTI i dati sul telefono. Continuare?")) {
+                    entries = imported.entries || [];
+                    archive = imported.archive || [];
+                    params = imported.params || params;
+                    
+                    saveLocalData();
+                    loadLocalData();
+                    alert("Backup importato correttamente!");
+                    switchTab('current');
+                }
+            } else {
+                alert("Il file caricato non contiene dati GeoDash validi.");
+            }
+        } catch (err) {
+            alert("Errore di lettura del file.");
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function calcolaOre(inizio, fine) {
+    if (!inizio || !fine) return 0;
+    const [h1, m1] = inizio.split(':').map(Number);
+    const [h2, m2] = fine.split(':').map(Number);
+    const minuti = (h2 * 60 + m2) - (h1 * 60 + m1);
+    return Math.max(0, minuti / 60);
+}
+
+function formatOre(ore) {
+    const h = Math.floor(ore);
+    const m = Math.round((ore - h) * 60);
+    if (m === 0) return `${h}h`;
+    return `${h}h ${m}m`;
+}
+
+function calculate(dataArray) {
+    let lordoFatturabile = 0, buoniPasto = 0, speseVive = 0, totalOre = 0;
+    dataArray.forEach(e => {
+        if (e.tipo === 'Ufficio') { lordoFatturabile += e.compenso; buoniPasto += e.extra; }
+        else { lordoFatturabile += (e.compenso + e.extra); }
+        speseVive += e.spese;
+        totalOre += calcolaOre(e.oraInizio, e.oraFine);
+    });
+    const baseImp = lordoFatturabile * (params.coeff / 100);
+    const imposta = baseImp * (params.tasse / 100);
+    const cipagSogg = baseImp * (params.cipag / 100);
+    const cipagInteg = lordoFatturabile * (params.integ / 100);
+    const netto = (lordoFatturabile - imposta - cipagSogg - params.comm - params.ordine) + buoniPasto - speseVive;
+    const pagariaLorda = totalOre > 0 ? lordoFatturabile / totalOre : 0;
+    const pagariaNet = totalOre > 0 ? netto / totalOre : 0;
+    return { lordoFatturabile, buoniPasto, baseImp, imposta, cipagSogg, cipagInteg, netto, speseVive, totalOre, pagariaLorda, pagariaNet };
+}
+
+function render() {
+    const d = calculate(entries);
+    document.getElementById('current-month-label').innerText = "Visualizzazione: " + viewName;
+    document.getElementById('tax-subtitle').innerText = `(${params.tasse}% su ${params.coeff}% imponibile)`;
+
+    document.getElementById('summary-cards').innerHTML = `
+        <div class="card"><div class="label">Lordo Fatturato</div><div class="value">€ ${d.lordoFatturabile.toFixed(2)}</div></div>
+        <div class="card"><div class="label">Buoni Pasto</div><div class="value" style="color:var(--secondary)">€ ${d.buoniPasto.toFixed(2)}</div></div>
+        <div class="card"><div class="label">Tasse/CIPAG</div><div class="value" style="color:var(--danger)">€ ${(d.imposta + d.cipagSogg).toFixed(2)}</div></div>
+        <div class="card" style="border-left: 5px solid var(--primary)"><div class="label">Netto Reale</div><div class="value">€ ${d.netto.toFixed(2)}</div></div>
+    `;
+
+    document.getElementById('ore-summary').innerHTML = `
+        <div class="ore-stat">
+            <div class="ore-label">⏱ Ore Totali Mese</div>
+            <div class="ore-value">${formatOre(d.totalOre)}</div>
+            <div class="ore-sub">${entries.length} giornate lavorate</div>
+        </div>
+        <div class="ore-stat">
+            <div class="ore-label">💰 Paga Oraria Lorda</div>
+            <div class="ore-value" style="color:var(--accent)">€ ${d.pagariaLorda.toFixed(2)}/h</div>
+            <div class="ore-sub">Sul lordo fatturato</div>
+        </div>
+        <div class="ore-stat">
+            <div class="ore-label">✅ Paga Oraria Netta</div>
+            <div class="ore-value" style="color:var(--primary)">€ ${d.pagariaNet.toFixed(2)}/h</div>
+            <div class="ore-sub">Dopo tasse e costi fissi</div>
+        </div>
+        <div class="ore-stat">
+            <div class="ore-label">📅 Media Ore/Giorno</div>
+            <div class="ore-value" style="color:var(--secondary)">${entries.length > 0 ? formatOre(d.totalOre / entries.length) : '0h'}</div>
+            <div class="ore-sub">Media per giornata lavorata</div>
+        </div>
+    `;
+
+    document.getElementById('tax-details-expanded').innerHTML = `
+        <div class="tax-group">
+            <h4>Imponibile</h4>
+            <div class="tax-item"><span>Lordo Totale</span><span class="tax-val">€ ${d.lordoFatturabile.toFixed(2)}</span></div>
+            <div class="tax-item"><span>Base Calcolo (${params.coeff}%)</span><span class="tax-val" style="color:var(--accent)">€ ${d.baseImp.toFixed(2)}</span></div>
+        </div>
+        <div class="tax-group">
+            <h4>Fisco e CIPAG</h4>
+            <div class="tax-item"><span>Imposta (${params.tasse}%)</span><span class="tax-val negative">- € ${d.imposta.toFixed(2)}</span></div>
+            <div class="tax-item"><span>CIPAG Soggettivo (${params.cipag}%)</span><span class="tax-val negative">- € ${d.cipagSogg.toFixed(2)}</span></div>
+            <div class="tax-item"><span>CIPAG Integrativo (${params.integ}%)</span><span class="tax-val positive">+ € ${d.cipagInteg.toFixed(2)}</span></div>
+        </div>
+        <div class="tax-group">
+            <h4>Costi e Uscite</h4>
+            <div class="tax-item"><span>Costi Fissi</span><span class="tax-val negative">- € ${(params.comm + params.ordine).toFixed(2)}</span></div>
+            <div class="tax-item"><span>Spese Trasferta</span><span class="tax-val negative">- € ${d.speseVive.toFixed(2)}</span></div>
+        </div>
+        <div class="tax-group">
+            <h4>Risultato</h4>
+            <div class="tax-item"><span>Buoni Pasto (+)</span><span class="tax-val positive">+ € ${d.buoniPasto.toFixed(2)}</span></div>
+            <div class="tax-item total-row"><span>NETTO DISPONIBILE</span><span class="tax-val positive">€ ${d.netto.toFixed(2)}</span></div>
+        </div>
+    `;
+
+    const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
+    if(sorted.length === 0) {
+        document.getElementById('log-table').innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 20px;">Nessun dato presente</td></tr>`;
+    } else {
+        document.getElementById('log-table').innerHTML = sorted.map((e, i) => {
+            const ore = calcolaOre(e.oraInizio, e.oraFine);
+            const totGiornata = e.compenso + e.extra - e.spese;
+            const pagariaGiorno = ore > 0 ? (totGiornata / ore) : 0;
+            const orarioStr = (e.oraInizio && e.oraFine) ? `${e.oraInizio} → ${e.oraFine}` : '—';
+            return `
+            <tr>
+                <td>${e.data.split('-').reverse().join('/')}</td>
+                <td>${e.luogo}</td>
+                <td><span class="badge badge-${e.tipo.toLowerCase()}">${e.tipo}</span></td>
+                <td style="font-size:12px; color:var(--text-muted)">${orarioStr}</td>
+                <td><span class="ore-badge">${ore > 0 ? formatOre(ore) : '—'}</span></td>
+                <td>€ ${e.compenso}</td>
+                <td>€ ${e.extra}</td>
+                <td>€ ${e.spese}</td>
+                <td style="font-weight:700">€ ${totGiornata.toFixed(2)}</td>
+                <td><span class="paga-oraria-badge">${ore > 0 ? '€ ' + pagariaGiorno.toFixed(2) + '/h' : '—'}</span></td>
+                <td><button onclick="deleteEntry(${entries.indexOf(e)})" style="background:none; border:none; color:var(--danger); font-size:16px; cursor:pointer">✕</button></td>
+            </tr>
+        `}).join('');
+    }
+    updateCharts(d);
+}
+
+window.saveParams = function() {
+    params = {
+        coeff: parseFloat(document.getElementById('p-coeff').value) || 0,
+        tasse: parseFloat(document.getElementById('p-tasse').value) || 0,
+        cipag: parseFloat(document.getElementById('p-cipag').value) || 0,
+        integ: parseFloat(document.getElementById('p-integ').value) || 0,
+        comm: parseFloat(document.getElementById('p-comm').value) || 0,
+        ordine: parseFloat(document.getElementById('p-ordine').value) || 0
+    };
+    render();
+    saveLocalData();
+}
+
+window.switchTab = function(t) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById('tab-btn-' + t).classList.add('active');
+    document.getElementById('section-current').style.display = t === 'current' ? 'block' : 'none';
+    document.getElementById('section-archive').style.display = t === 'archive' ? 'block' : 'none';
+    document.getElementById('section-params').style.display = t === 'params' ? 'block' : 'none';
+    if(t === 'archive') window.renderArchive();
+}
+
+window.archiveMonth = function() {
+    if(entries.length === 0) return alert("Niente da archiviare.");
+    const nome = new Date(entries[0].data).toLocaleString('it-IT', { month: 'long', year: 'numeric' }).toUpperCase();
+    if(confirm(`Archiviare il mese di ${nome}?`)) {
+        archive.push({ nome, dati: [...entries] });
+        entries = [];
+        viewName = "Mese Corrente";
+        render();
+        saveLocalData();
+    }
+}
+
+window.renderArchive = function() {
+    const container = document.getElementById('archive-list');
+    if (archive.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding: 20px;">Archivio vuoto</div>`;
+        return;
+    }
+    container.innerHTML = [...archive].reverse().map((m, i) => {
+        const stats = calculate(m.dati);
+        const idx = archive.length - 1 - i;
+        return `
+            <div class="archive-item">
+                <div onclick="loadArchive(${idx})" style="cursor:pointer; flex-grow:1">
+                    <h3 style="color:var(--primary); margin-bottom:5px;">${m.nome}</h3>
+                    <span style="font-size:14px;">
+                        Netto: <strong style="color:white">€ ${stats.netto.toFixed(2)}</strong>
+                        &nbsp;|&nbsp; Ore: <strong style="color:var(--secondary)">${formatOre(stats.totalOre)}</strong>
+                        &nbsp;|&nbsp; €/h netto: <strong style="color:var(--primary)">€ ${stats.pagariaNet.toFixed(2)}</strong>
+                    </span>
+                </div>
+                <button class="btn btn-danger" style="padding:8px 12px; font-size:12px; font-weight:bold" onclick="deleteArchive(${idx})">X</button>
+            </div>
+        `;
+    }).join('');
+}
+
+window.loadArchive = function(idx) {
+    if(confirm("Caricare questo archivio sovrascriverà la dashboard temporanea. Procedere?")) {
+        entries = [...archive[idx].dati];
+        viewName = archive[idx].nome + " (ARCHIVIO)";
+        window.switchTab('current');
+        render();
+        saveLocalData();
+    }
+}
+
+window.deleteArchive = function(idx) {
+    if(confirm("Eliminare definitivamente questo mese dall'archivio?")) {
+        archive.splice(idx, 1);
+        window.renderArchive();
+        saveLocalData();
+    }
+}
+
+window.addEntry = function() {
+    const oraInizio = document.getElementById('inp-ora-inizio').value;
+    const oraFine = document.getElementById('inp-ora-fine').value;
+    if (oraInizio && oraFine && oraInizio >= oraFine) {
+        return alert("L'ora di fine deve essere successiva all'ora di inizio.");
+    }
+    const e = {
+        data: document.getElementById('inp-data').value,
+        luogo: document.getElementById('inp-luogo').value,
+        tipo: document.getElementById('inp-tipo').value,
+        oraInizio, oraFine,
+        compenso: parseFloat(document.getElementById('inp-compenso').value) || 0,
+        extra: parseFloat(document.getElementById('inp-extra').value) || 0,
+        spese: parseFloat(document.getElementById('inp-spese').value) || 0
+    };
+    if(!e.data || !e.luogo) return alert("Inserisci data e località");
+    entries.push(e);
+    document.getElementById('inp-luogo').value = '';
+    document.getElementById('inp-spese').value = '0';
+    render();
+    saveLocalData();
+}
+
+window.deleteEntry = function(i) {
+    if(confirm("Eliminare questa giornata?")) {
+        entries.splice(i, 1);
+        render();
+        saveLocalData();
+    }
+}
+
+window.updateDefaultExtra = function() {
+    const tipo = document.getElementById('inp-tipo').value;
+    document.getElementById('inp-extra').value = (tipo === 'Trasferta') ? 20 : 8;
+}
+
+function updateCharts(d) {
+    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' } }, x: { ticks: { color: '#9ca3af' } } } };
+    if(charts.b) charts.b.destroy(); if(charts.p) charts.p.destroy(); if(charts.d) charts.d.destroy();
+    
+    const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
+    const labelsBar = sorted.length > 0 ? sorted.map(e => e.data.split('-')[2]) : ['Nessun dato'];
+    const dataBar = sorted.length > 0 ? sorted.map(e => calcolaOre(e.oraInizio, e.oraFine)) : [0];
+
+    charts.b = new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: { labels: labelsBar, datasets: [{ data: dataBar, backgroundColor: '#3b82f6', label: 'Ore' }] },
+        options: { ...opt, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => formatOre(ctx.raw) } } } }
+    });
+    
+    charts.p = new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: { labels: ['Ufficio', 'Trasferta'], datasets: [{ data: [entries.filter(e=>e.tipo==='Ufficio').length, entries.filter(e=>e.tipo==='Trasferta').length], backgroundColor: ['#3b82f6','#10b981'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    
+    charts.d = new Chart(document.getElementById('donutChart'), {
+        type: 'pie',
+        data: { labels: ['Netto','Tasse','Costi'], datasets: [{ data: [Math.max(0, d.netto), d.imposta+d.cipagSogg, params.comm+params.ordine+d.speseVive], backgroundColor: ['#10b981','#ef4444','#f59e0b'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
+// REGISTRAZIONE DEL SERVICE WORKER PER FUNZIONAMENTO OFFLINE
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registrato con successo!', reg.scope))
+            .catch(err => console.error('Errore registrazione Service Worker:', err));
+    });
+}
+
+document.getElementById('inp-data').valueAsDate = new Date();
+loadLocalData();
+</script>
+</body>
+</html>

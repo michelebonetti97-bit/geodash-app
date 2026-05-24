@@ -1,0 +1,22 @@
+{
+  "name": "GeoDash Pro Fiscal",
+  "short_name": "GeoDash",
+  "description": "Dashboard per la gestione di ore, trasferte e calcolo tasse locale.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme-color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f4cc.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/512x512/1f4cc.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

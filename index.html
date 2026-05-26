@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>GeoDash Pro</title>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -15,64 +14,62 @@
             --bg-card: #111827;
             --primary: #10b981;
             --secondary: #3b82f6;
-            --danger: #ef4444;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border: #374151;
-            --radius: 12px;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 90px; }
-        .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
-        
-        .header { margin-bottom: 1.5rem; }
-        .header h1 { font-size: 28px; font-weight: 800; color: var(--primary); }
-
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 100px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .section-panel { display: none; }
         .section-panel.active { display: block; }
-
-        .card { background: var(--bg-card); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.25rem; border: 1px solid var(--border); }
-        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); }
-
-        .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .btn-success { background: var(--primary); color: #000; }
-        
-        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .tab-item { cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 600; }
+        .card { background: var(--bg-card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
+        .ios-input { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); border-radius: 8px; color: white; margin-bottom: 10px; }
+        .result-box { background: var(--primary); color: #000; padding: 15px; border-radius: 8px; font-weight: 800; text-align: center; margin-top: 10px; }
+        .tab-bar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 20px; border-top: 1px solid var(--border); }
+        .tab-item { cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 700; }
         .tab-item.active { color: var(--primary); }
-
-        .bando-link { display: block; padding: 12px; background: #1f2937; border-radius: 8px; margin-bottom: 8px; color: var(--text-main); text-decoration: none; font-size: 14px; border: 1px solid var(--border); }
-        .bando-link:hover { border-color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>GeoDash Pro</h1>
-    </div>
+    <div style="margin-bottom:20px;"><h1>GeoDash <span style="color:var(--primary)">Pro</span></h1></div>
 
-    <div id="panel-dashboard" class="section-panel active">
+    <div id="panel-toolbox" class="section-panel active">
         <div class="card">
-            <div class="card-title">Riepilogo</div>
-            <div id="stats" style="font-size: 14px;">In attesa di dati...</div>
+            <div class="card-title">Calcolatore Parcelle</div>
+            <select id="tool-type" class="ios-input" onchange="calcParcella()">
+                <optgroup label="Geofisica">
+                    <option value="150">HVSR</option>
+                    <option value="400">MASW / ReMi</option>
+                    <option value="800">ERT (Tomografia)</option>
+                </optgroup>
+                <optgroup label="Geotecnica">
+                    <option value="350">CPT / CPTU</option>
+                    <option value="250">DPSH / SPT</option>
+                </optgroup>
+                <optgroup label="Idrogeologia">
+                    <option value="600">Relazione Idrogeologica</option>
+                </optgroup>
+            </select>
+            <input type="number" id="tool-qty" class="ios-input" placeholder="Numero punti/indagini" oninput="calcParcella()">
+            <div class="result-box" id="result-price">Stima: € 0</div>
         </div>
-        <div class="card"><canvas id="barChart"></canvas></div>
     </div>
 
     <div id="panel-ai" class="section-panel">
         <div class="card">
-            <div class="card-title">Radar Bandi & Opportunità</div>
-            <a href="https://www.inpa.gov.it/" class="bando-link">Concorsi Pubblici (inPA) ↗</a>
-            <a href="https://www.cngeologi.it/category/bandi-e-concorsi/" class="bando-link">Consiglio Nazionale Geologi ↗</a>
-            <a href="https://www.gazzettaufficiale.it/concorsi" class="bando-link">Gazzetta Ufficiale ↗</a>
+            <div class="card-title">Radar Bandi</div>
+            <a href="https://www.inpa.gov.it/" class="ios-input" style="display:block; text-decoration:none;">inPA Concorsi ↗</a>
+            <a href="https://www.cngeologi.it/category/bandi-e-concorsi/" class="ios-input" style="display:block; text-decoration:none;">CNG Bandi ↗</a>
         </div>
     </div>
 </div>
 
 <nav class="tab-bar">
-    <div class="tab-item active" onclick="nav('panel-dashboard', this)">DASHBOARD</div>
+    <div class="tab-item active" onclick="nav('panel-toolbox', this)">TOOLBOX</div>
     <div class="tab-item" onclick="nav('panel-ai', this)">AI & BANDI</div>
 </nav>
 
@@ -82,6 +79,13 @@
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         el.classList.add('active');
+    }
+
+    function calcParcella() {
+        const type = parseInt(document.getElementById('tool-type').value);
+        const qty = parseInt(document.getElementById('tool-qty').value) || 0;
+        const total = type * qty;
+        document.getElementById('result-price').innerText = `Stima: € ${total}`;
     }
 </script>
 </body>

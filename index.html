@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoDash Pro</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f4cc.png">
-    
+    <title>GeoDash Pro - Local Management</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <style>
         :root {
@@ -26,146 +20,114 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-main); color: var(--text-main); font-family: sans-serif; padding-bottom: 50px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: sans-serif; padding-bottom: 60px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.25rem; }
         
         .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px; }
-        .header h1 { font-size: 24px; color: var(--primary); display: flex; align-items: center; gap: 15px; }
+        .header h1 { font-size: 24px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         
-        .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: #1f2937; color: var(--text-muted); display: flex; align-items: center; gap: 6px; height: fit-content; border: 1px solid var(--border);}
-        .cloud-status.online::before { content: ''; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; display: inline-block; }
+        .local-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: #1f2937; color: var(--text-muted); display: flex; align-items: center; gap: 6px; border: 1px solid var(--border);}
+        .local-status::before { content: ''; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; display: inline-block; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); overflow-x: auto;}
-        .tab { padding: 10px 20px; color: var(--text-muted); cursor: pointer; border:none; background:none; border-bottom: 2px solid transparent; font-weight: 600; white-space: nowrap; }
-        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tabs { display: flex; gap: 5px; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); overflow-x: auto; padding-bottom: 5px;}
+        .tab { padding: 12px 16px; color: var(--text-muted); cursor: pointer; border:none; background:none; border-bottom: 2px solid transparent; font-weight: 600; font-size: 14px; white-space: nowrap; transition: 0.2s; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); background: #111827; border-radius: 8px 8px 0 0; }
 
-        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 1.5rem; }
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
+
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 1.5rem; }
         .card { background: var(--bg-card); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); }
         .card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-        .card .value { font-size: 24px; font-weight: 700; }
-        .card .sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .card .value { font-size: 22px; font-weight: 700; }
 
-        .tax-expansion { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); 
-            padding: 2rem; margin-bottom: 2rem; border-left: 4px solid var(--accent);
-        }
-        .tax-title { font-size: 18px; font-weight: 700; margin-bottom: 1.5rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
-        .tax-grid-detailed { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; }
-        .tax-group h4 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        .tax-item { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #1f2937; }
-        .tax-item.total-row { border-top: 1px solid var(--border); border-bottom: none; font-weight: 700; margin-top: 10px; padding-top: 15px; font-size: 16px; }
-        .tax-val { font-family: monospace; font-size: 15px; }
+        .tax-expansion { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); }
+        .tax-title { font-size: 16px; font-weight: 700; margin-bottom: 1.25rem; color: var(--accent); display: flex; justify-content: space-between; }
+        .tax-grid-detailed { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .tax-group h4 { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+        .tax-item { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
+        .tax-item.total-row { border-top: 1px solid var(--border); font-weight: 700; margin-top: 8px; padding-top: 8px; font-size: 15px; }
         .negative { color: var(--danger); }
         .positive { color: var(--primary); }
 
-        .charts-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
-        .chart-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+        .charts-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 14px; margin-bottom: 1.5rem; }
+        .chart-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; height: 200px; }
 
-        .table-container { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; margin-bottom: 2rem; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 950px; }
-        th { background: #1f2937; padding: 12px; text-align: left; color: var(--text-muted); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .badge-trasferta { background: #064e3b; color: #6ee7b7; }
-        .badge-ufficio { background: #1e3a8a; color: #93c5fd; }
-
-        .ore-badge { font-family: monospace; font-size: 13px; color: var(--accent); font-weight: 700; }
-        .paga-oraria-badge { font-family: monospace; font-size: 13px; color: var(--secondary); }
-
-        .add-section { background: #1f2937; border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--primary); }
+        .add-section { background: var(--bg-card); border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--primary); margin-bottom: 1.5rem; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
         .form-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
         .form-group { display: flex; flex-direction: column; }
-        input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #111827; color: white; outline: none; }
-        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; }
+        input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #000; color: white; outline: none; font-size: 14px; }
+        
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; transition: 0.2s; text-align: center;}
         .btn-primary { background: var(--primary); color: white; width: 100%; margin-top: 15px; }
-        .btn-archive { background: var(--secondary); color: white; }
-        .btn-danger { background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer;}
-        .btn-accent { background: var(--accent); color: black; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-accent { background: var(--accent); color: #000; }
+        .btn-danger { background: var(--danger); color: white; }
         
-        .ore-summary { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--secondary); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
-        .ore-stat .ore-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
-        .ore-stat .ore-value { font-size: 22px; font-weight: 700; color: var(--secondary); }
-        .ore-stat .ore-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+        .btn-row { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
 
-        .param-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .table-container { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
+        th { background: #1f2937; padding: 12px; text-align: left; color: var(--text-muted); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
+        .badge { padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+        .badge-trasferta { background: #064e3b; color: #6ee7b7; }
+        .badge-ufficio { background: #1e3a8a; color: #93c5fd; }
+
+        .archive-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .param-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
         .param-card { background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
-        .param-card h4 { margin-bottom: 15px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .param-card label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; margin-top: 15px; }
+        .param-card h4 { margin-bottom: 12px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .param-card label { display: block; font-size: 11px; color: var(--text-muted); margin-top: 12px; text-transform: uppercase; margin-bottom: 4px; }
 
-        .archive-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        
-        .backup-section { margin-top: 25px; border-top: 1px dashed var(--border); padding-top: 20px; }
-        .backup-btn-group { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
-        .backup-btn-group .btn { flex: 1; min-width: 160px; text-align: center; }
-        .file-input-label { background: var(--secondary); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; text-align: center; display: inline-block; flex: 1; min-width: 160px;}
-        .hidden-file-input { display: none; }
+        .ai-card { background: linear-gradient(135deg, #1e1b4b 0%, #111827 100%); border: 1px solid #6366f1; border-radius: var(--radius); padding: 1.5rem; }
+        .ai-title { color: #818cf8; font-size: 18px; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .ai-box { background: rgba(0,0,0,0.4); border: 1px solid #312e81; padding: 1.25rem; border-radius: 8px; font-size: 14px; line-height: 1.6; }
+        .ai-bullet { margin-bottom: 12px; padding-left: 15px; position: relative; }
+        .ai-bullet::before { content: '⚡'; position: absolute; left: 0; top: 0; }
 
-        @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } .chart-box { height: 160px; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>GeoDash <span style="font-weight:300">Pro</span> <div class="cloud-status online" id="status-badge">PWA Locale</div></h1>
-        <button class="btn btn-archive" onclick="archiveMonth()">ARCHIVIA MESE ATTUALE</button>
+        <h1>GeoDash <span style="font-weight:300">Pro</span></h1>
+        <div class="local-status">Offline Local Storage</div>
     </div>
 
     <div class="tabs">
-        <button class="tab active" id="tab-btn-current" onclick="switchTab('current')">Dashboard</button>
-        <button class="tab" id="tab-btn-archive" onclick="switchTab('archive')">Storico Archivio</button>
-        <button class="tab" id="tab-btn-params" onclick="switchTab('params')">Parametri e Backup</button>
+        <button class="tab active" onclick="switchTab('tab-dashboard', this)">1. Dashboard</button>
+        <button class="tab" onclick="switchTab('tab-attivita', this)">2. Attività</button>
+        <button class="tab" onclick="switchTab('tab-archivio', this)">3. Archivio & Backup</button>
+        <button class="tab" onclick="switchTab('tab-parametri', this)">4. Parametri</button>
+        <button class="tab" onclick="switchTab('tab-ai', this)">5. Suggerimenti AI</button>
     </div>
 
-    <div id="section-current">
-        <div id="current-month-label" style="margin-bottom: 15px; font-weight: bold; color: var(--accent); text-transform: uppercase;">Visualizzazione: Mese Corrente</div>
-        
+    <div id="tab-dashboard" class="section-panel active">
+        <div style="margin-bottom:12px; font-weight:bold; color:var(--primary)" id="dashboard-view-title">MESE ATTUALE</div>
         <div class="cards" id="summary-cards"></div>
-        <div class="ore-summary" id="ore-summary"></div>
-
+        
         <div class="tax-expansion">
-            <div class="tax-title">Dettaglio Analitico Tasse e Contributi <span id="tax-subtitle" style="font-size: 12px; color: var(--text-muted); font-weight: 400;"></span></div>
+            <div class="tax-title">Analisi Fiscale e Contributiva</div>
             <div class="tax-grid-detailed" id="tax-details-expanded"></div>
         </div>
 
         <div class="charts-row">
-            <div class="chart-box"><canvas id="barChart" height="180"></canvas></div>
-            <div class="chart-box"><canvas id="pieChart" height="180"></canvas></div>
-            <div class="chart-box"><canvas id="donutChart" height="180"></canvas></div>
+            <div class="chart-box"><canvas id="barChart"></canvas></div>
+            <div class="chart-box"><canvas id="pieChart"></canvas></div>
+            <div class="chart-box"><canvas id="donutChart"></canvas></div>
         </div>
+    </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Località</th>
-                        <th>Tipo</th>
-                        <th>Orario</th>
-                        <th>Ore</th>
-                        <th>Fatturato</th>
-                        <th>Extra/BP</th>
-                        <th>Spese</th>
-                        <th>Tot Giornata</th>
-                        <th>€/ora</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="log-table"></tbody>
-            </table>
-        </div>
-
+    <div id="tab-attivita" class="section-panel">
         <div class="add-section">
+            <h3 style="color:var(--primary); margin-bottom:15px;">Aggiungi Attività Giornaliera</h3>
             <div class="form-grid">
-                <div class="form-group">
-                    <div class="form-label">Data</div>
-                    <input type="date" id="inp-data">
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Località</div>
-                    <input type="text" id="inp-luogo" placeholder="Località">
-                </div>
+                <div class="form-group"><div class="form-label">Data</div><input type="date" id="inp-data"></div>
+                <div class="form-group"><div class="form-label">Località</div><input type="text" id="inp-luogo" placeholder="Es. Scandiano"></div>
                 <div class="form-group">
                     <div class="form-label">Tipo</div>
                     <select id="inp-tipo" onchange="updateDefaultExtra()">
@@ -173,68 +135,65 @@
                         <option value="Ufficio">Ufficio</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <div class="form-label">Ora Inizio</div>
-                    <input type="time" id="inp-ora-inizio" value="08:00">
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Ora Fine</div>
-                    <input type="time" id="inp-ora-fine" value="17:00">
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Compenso (€)</div>
-                    <input type="number" id="inp-compenso" value="105">
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Extra/BP (€)</div>
-                    <input type="number" id="inp-extra" value="20">
-                </div>
-                <div class="form-group">
-                    <div class="form-label">Spese (€)</div>
-                    <input type="number" id="inp-spese" value="0">
-                </div>
+                <div class="form-group"><div class="form-label">Ora Inizio</div><input type="time" id="inp-ora-inizio" value="08:00"></div>
+                <div class="form-group"><div class="form-label">Ora Fine</div><input type="time" id="inp-ora-fine" value="17:00"></div>
+                <div class="form-group"><div class="form-label">Compenso (€)</div><input type="number" id="inp-compenso" value="105"></div>
+                <div class="form-group"><div class="form-label">Extra/BP (€)</div><input type="number" id="inp-extra" value="20"></div>
+                <div class="form-group"><div class="form-label">Spese (€)</div><input type="number" id="inp-spese" value="0"></div>
             </div>
-            <button class="btn btn-primary" onclick="addEntry()">AGGIUNGI GIORNATA</button>
+            <button class="btn btn-primary" onclick="addEntry()">SALVA GIORNATA</button>
+        </div>
+
+        <h3 style="margin-bottom:12px; color:var(--secondary)">Riepilogo Attività Mensili</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th><th>Località</th><th>Tipo</th><th>Orario</th><th>Ore</th><th>Lordo</th><th>Extra</th><th>Spese</th><th>Netto Stimato</th><th>Azione</th>
+                    </tr>
+                </thead>
+                <tbody id="log-table"></tbody>
+            </table>
         </div>
     </div>
 
-    <div id="section-archive" style="display:none"><div id="archive-list"></div></div>
+    <div id="tab-archivio" class="section-panel">
+        <h3 style="color:var(--accent); margin-bottom:15px;">Gestione Archivio Mesi</h3>
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="archiveMonth()">ARCHIVIA MESE ATTUALE</button>
+            <button class="btn btn-accent" onclick="exportToCSV()">ESPORTA IN EXCEL / CSV (BACKUP)</button>
+        </div>
 
-    <div id="section-params" style="display:none">
+        <h3 style="color:var(--text-main); margin-bottom:12px; margin-top:20px;">Storico Mesi Archiviati</h3>
+        <div id="archive-list"></div>
+    </div>
+
+    <div id="tab-parametri" class="section-panel">
+        <h3 style="color:var(--primary); margin-bottom:15px;">Configurazione Parametri Fiscali</h3>
         <div class="param-grid">
             <div class="param-card">
                 <h4>Regime Forfettario</h4>
-                <label>Coefficiente Redditività (%)</label>
-                <input type="number" id="p-coeff" value="78" onchange="saveParams()">
-                <label>Aliquota Imposta (%)</label>
-                <input type="number" id="p-tasse" value="5" onchange="saveParams()">
+                <label>Coefficiente Redditività (%)</label><input type="number" id="p-coeff" value="78" onchange="saveParams()">
+                <label>Aliquota Imposta Sostitutiva (%)</label><input type="number" id="p-tasse" value="5" onchange="saveParams()">
             </div>
             <div class="param-card">
                 <h4>Previdenza CIPAG</h4>
-                <label>Soggettivo (%)</label>
-                <input type="number" id="p-cipag" value="12" step="0.1" onchange="saveParams()">
-                <label>Integrativo (%)</label>
-                <input type="number" id="p-integ" value="4" onchange="saveParams()">
+                <label>Contributo Soggettivo (%)</label><input type="number" id="p-cipag" value="12" step="0.1" onchange="saveParams()">
+                <label>Contributo Integrativo (%)</label><input type="number" id="p-integ" value="4" onchange="saveParams()">
             </div>
             <div class="param-card">
-                <h4>Costi Fissi</h4>
-                <label>Commercialista (€)</label>
-                <input type="number" id="p-comm" value="60" onchange="saveParams()">
-                <label>Ordine + Maternità (€)</label>
-                <input type="number" id="p-ordine" value="15.42" step="0.01" onchange="saveParams()">
+                <h4>Spese Gestione Fisse</h4>
+                <label>Commercialista Mensile (€)</label><input type="number" id="p-comm" value="60" onchange="saveParams()">
+                <label>Quota Ordine Mensile (€)</label><input type="number" id="p-ordine" value="15.42" step="0.01" onchange="saveParams()">
             </div>
         </div>
+    </div>
 
-        <div class="param-card backup-section">
-            <h4 style="color: var(--accent);">Salvataggio & Backup Sicuro</h4>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">I tuoi dati sono salvati automaticamente nel browser di questo smartphone. Esporta periodicamente un file di backup per non rischiare di perderli o per spostarli su un altro dispositivo.</p>
-            <div class="backup-btn-group">
-                <button class="btn btn-accent" onclick="exportBackupData()">ESPORTA BACKUP (JSON)</button>
-                <label class="file-input-label">
-                    IMPORTA BACKUP
-                    <input type="file" class="hidden-file-input" id="import-file" accept=".json" onchange="importBackupData(event)">
-                </label>
-            </div>
+    <div id="tab-ai" class="section-panel">
+        <div class="ai-card">
+            <div class="ai-title">🤖 Assistente Finanziario AI Interno</div>
+            <p style="color:var(--text-muted); margin-bottom:15px; font-size:13px;">L'algoritmo analizza i dati inseriti questo mese per calcolare l'efficienza della tua Partita IVA.</p>
+            <div class="ai-box" id="ai-insights">Nessun dato sufficiente per elaborare suggerimenti. Aggiungi delle ore lavorative.</div>
         </div>
     </div>
 </div>
@@ -247,323 +206,137 @@ let viewName = "Mese Corrente";
 let charts = {};
 
 const FALLBACK_DATA = [
-  {data:"2026-04-01",luogo:"Scandiano zona industriale",tipo:"Trasferta",oraInizio:"08:00",oraFine:"17:00",compenso:105,extra:20,spese:9},
-  {data:"2026-04-03",luogo:"Ufficio",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:4.5}
+  {data:"2026-05-01",luogo:"Sede Scandiano",tipo:"Trasferta",oraInizio:"08:00",oraFine:"17:00",compenso:105,extra:20,spese:5},
+  {data:"2026-05-04",luogo:"Ufficio Centrale",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:0}
 ];
 
-function loadLocalData() {
-    try {
-        const localData = localStorage.getItem("geodash_pro_local_db");
-        if (localData) {
-            const parsed = JSON.parse(localData);
-            entries = parsed.entries || [];
-            archive = parsed.archive || [];
-            params = parsed.params || params;
-        } else {
-            entries = FALLBACK_DATA;
-            saveLocalData();
-        }
-        
+function calcolaOre(inizio, fine) {
+    if (!inizio || !fine) return 0;
+    const [h1, m1] = inizio.split(':').map(Number);
+    const [h2, m2] = fine.split(':').map(Number);
+    return Math.max(0, ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60);
+}
+
+function formatOre(ore) {
+    const h = Math.floor(ore);
+    const m = Math.round((ore - h) * 60);
+    return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+function switchTab(tabId, buttonEl) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    buttonEl.classList.add('active');
+    if(tabId === 'tab-archivio') renderArchive();
+}
+
+function loadFromStorage() {
+    const le = localStorage.getItem("gd_entries");
+    const la = localStorage.getItem("gd_archive");
+    const lp = localStorage.getItem("gd_params");
+    if(le) entries = JSON.parse(le); else entries = FALLBACK_DATA;
+    if(la) archive = JSON.parse(la);
+    if(lp) {
+        params = JSON.parse(lp);
         document.getElementById('p-coeff').value = params.coeff;
         document.getElementById('p-tasse').value = params.tasse;
         document.getElementById('p-cipag').value = params.cipag;
         document.getElementById('p-integ').value = params.integ;
         document.getElementById('p-comm').value = params.comm;
         document.getElementById('p-ordine').value = params.ordine;
-
-        updateStatusBadge("Dati Sincronizzati", true);
-        render();
-    } catch (e) {
-        console.error(e);
-        updateStatusBadge("Errore Memoria", false);
     }
+    render();
 }
 
-function saveLocalData() {
-    try {
-        const dataToSave = { entries, archive, params };
-        localStorage.setItem("geodash_pro_local_db", JSON.stringify(dataToSave));
-        updateStatusBadge("Dati Sincronizzati", true);
-    } catch (e) {
-        console.error(e);
-        updateStatusBadge("Memoria Piena!", false);
-    }
-}
-
-function updateStatusBadge(text, isOk) {
-    const badge = document.getElementById('status-badge');
-    badge.innerText = text;
-    if (isOk) badge.classList.add('online');
-    else badge.classList.remove('online');
-}
-
-function exportBackupData() {
-    const backupObj = { entries, archive, params, date: new Date().toISOString() };
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
-    const dlAnchorElem = document.createElement('a');
-    const today = new Date().toISOString().slice(0, 10);
-    dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", `GeoDash_Backup_${today}.json`);
-    document.body.appendChild(dlAnchorElem);
-    dlAnchorElem.click();
-    dlAnchorElem.remove();
-}
-
-function importBackupData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const imported = JSON.parse(e.target.result);
-            if (imported.entries || imported.archive || imported.params) {
-                if (confirm("Attenzione! Caricando questo file sovrascriverai TUTTI i dati sul telefono. Continuare?")) {
-                    entries = imported.entries || [];
-                    archive = imported.archive || [];
-                    params = imported.params || params;
-                    
-                    saveLocalData();
-                    loadLocalData();
-                    alert("Backup importato correttamente!");
-                    switchTab('current');
-                }
-            } else {
-                alert("Il file caricato non contiene dati GeoDash validi.");
-            }
-        } catch (err) {
-            alert("Errore di lettura del file.");
-        }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
-function calcolaOre(inizio, fine) {
-    if (!inizio || !fine) return 0;
-    const [h1, m1] = inizio.split(':').map(Number);
-    const [h2, m2] = fine.split(':').map(Number);
-    const minuti = (h2 * 60 + m2) - (h1 * 60 + m1);
-    return Math.max(0, minuti / 60);
-}
-
-function formatOre(ore) {
-    const h = Math.floor(ore);
-    const m = Math.round((ore - h) * 60);
-    if (m === 0) return `${h}h`;
-    return `${h}h ${m}m`;
+function saveToStorage() {
+    localStorage.setItem("gd_entries", JSON.stringify(entries));
+    localStorage.setItem("gd_archive", JSON.stringify(archive));
+    localStorage.setItem("gd_params", JSON.stringify(params));
 }
 
 function calculate(dataArray) {
     let lordoFatturabile = 0, buoniPasto = 0, speseVive = 0, totalOre = 0;
+    let nTrasferte = 0, nUfficio = 0;
     dataArray.forEach(e => {
-        if (e.tipo === 'Ufficio') { lordoFatturabile += e.compenso; buoniPasto += e.extra; }
-        else { lordoFatturabile += (e.compenso + e.extra); }
+        if (e.tipo === 'Ufficio') { lordoFatturabile += e.compenso; buoniPasto += e.extra; nUfficio++; }
+        else { lordoFatturabile += (e.compenso + e.extra); nTrasferte++; }
         speseVive += e.spese;
         totalOre += calcolaOre(e.oraInizio, e.oraFine);
     });
     const baseImp = lordoFatturabile * (params.coeff / 100);
     const imposta = baseImp * (params.tasse / 100);
     const cipagSogg = baseImp * (params.cipag / 100);
-    const cipagInteg = lordoFatturabile * (params.integ / 100);
     const netto = (lordoFatturabile - imposta - cipagSogg - params.comm - params.ordine) + buoniPasto - speseVive;
-    const pagariaLorda = totalOre > 0 ? lordoFatturabile / totalOre : 0;
-    const pagariaNet = totalOre > 0 ? netto / totalOre : 0;
-    return { lordoFatturabile, buoniPasto, baseImp, imposta, cipagSogg, cipagInteg, netto, speseVive, totalOre, pagariaLorda, pagariaNet };
+    return { lordoFatturabile, buoniPasto, baseImp, imposta, cipagSogg, netto, speseVive, totalOre, nTrasferte, nUfficio };
 }
 
 function render() {
     const d = calculate(entries);
-    document.getElementById('current-month-label').innerText = "Visualizzazione: " + viewName;
-    document.getElementById('tax-subtitle').innerText = `(${params.tasse}% su ${params.coeff}% imponibile)`;
+    document.getElementById('dashboard-view-title').innerText = viewName.toUpperCase();
 
+    // Aggiorna Sezione 1: Cards Dashboard
     document.getElementById('summary-cards').innerHTML = `
         <div class="card"><div class="label">Lordo Fatturato</div><div class="value">€ ${d.lordoFatturabile.toFixed(2)}</div></div>
         <div class="card"><div class="label">Buoni Pasto</div><div class="value" style="color:var(--secondary)">€ ${d.buoniPasto.toFixed(2)}</div></div>
-        <div class="card"><div class="label">Tasse/CIPAG</div><div class="value" style="color:var(--danger)">€ ${(d.imposta + d.cipagSogg).toFixed(2)}</div></div>
-        <div class="card" style="border-left: 5px solid var(--primary)"><div class="label">Netto Reale</div><div class="value">€ ${d.netto.toFixed(2)}</div></div>
+        <div class="card"><div class="label">Trattenute (Fisco+Cipag)</div><div class="value" style="color:var(--danger)">€ ${(d.imposta + d.cipagSogg).toFixed(2)}</div></div>
+        <div class="card" style="border-left: 4px solid var(--primary)"><div class="label">Netto Reale Tasca</div><div class="value" style="color:var(--primary)">€ ${d.netto.toFixed(2)}</div></div>
     `;
 
-    document.getElementById('ore-summary').innerHTML = `
-        <div class="ore-stat">
-            <div class="ore-label">⏱ Ore Totali Mese</div>
-            <div class="ore-value">${formatOre(d.totalOre)}</div>
-            <div class="ore-sub">${entries.length} giornate lavorate</div>
-        </div>
-        <div class="ore-stat">
-            <div class="ore-label">💰 Paga Oraria Lorda</div>
-            <div class="ore-value" style="color:var(--accent)">€ ${d.pagariaLorda.toFixed(2)}/h</div>
-            <div class="ore-sub">Sul lordo fatturato</div>
-        </div>
-        <div class="ore-stat">
-            <div class="ore-label">✅ Paga Oraria Netta</div>
-            <div class="ore-value" style="color:var(--primary)">€ ${d.pagariaNet.toFixed(2)}/h</div>
-            <div class="ore-sub">Dopo tasse e costi fissi</div>
-        </div>
-        <div class="ore-stat">
-            <div class="ore-label">📅 Media Ore/Giorno</div>
-            <div class="ore-value" style="color:var(--secondary)">${entries.length > 0 ? formatOre(d.totalOre / entries.length) : '0h'}</div>
-            <div class="ore-sub">Media per giornata lavorata</div>
-        </div>
-    `;
-
+    // Tabella Tasse Dettagliata
     document.getElementById('tax-details-expanded').innerHTML = `
-        <div class="tax-group">
-            <h4>Imponibile</h4>
-            <div class="tax-item"><span>Lordo Totale</span><span class="tax-val">€ ${d.lordoFatturabile.toFixed(2)}</span></div>
-            <div class="tax-item"><span>Base Calcolo (${params.coeff}%)</span><span class="tax-val" style="color:var(--accent)">€ ${d.baseImp.toFixed(2)}</span></div>
-        </div>
-        <div class="tax-group">
-            <h4>Fisco e CIPAG</h4>
-            <div class="tax-item"><span>Imposta (${params.tasse}%)</span><span class="tax-val negative">- € ${d.imposta.toFixed(2)}</span></div>
-            <div class="tax-item"><span>CIPAG Soggettivo (${params.cipag}%)</span><span class="tax-val negative">- € ${d.cipagSogg.toFixed(2)}</span></div>
-            <div class="tax-item"><span>CIPAG Integrativo (${params.integ}%)</span><span class="tax-val positive">+ € ${d.cipagInteg.toFixed(2)}</span></div>
-        </div>
-        <div class="tax-group">
-            <h4>Costi e Uscite</h4>
-            <div class="tax-item"><span>Costi Fissi</span><span class="tax-val negative">- € ${(params.comm + params.ordine).toFixed(2)}</span></div>
-            <div class="tax-item"><span>Spese Trasferta</span><span class="tax-val negative">- € ${d.speseVive.toFixed(2)}</span></div>
-        </div>
-        <div class="tax-group">
-            <h4>Risultato</h4>
-            <div class="tax-item"><span>Buoni Pasto (+)</span><span class="tax-val positive">+ € ${d.buoniPasto.toFixed(2)}</span></div>
-            <div class="tax-item total-row"><span>NETTO DISPONIBILE</span><span class="tax-val positive">€ ${d.netto.toFixed(2)}</span></div>
-        </div>
+        <div class="tax-group"><h4>Base Imponibile</h4><div class="tax-item"><span>Fatturato Totale</span><span>€ ${d.lordoFatturabile.toFixed(2)}</span></div><div class="tax-item"><span>Base Imponibile (${params.coeff}%)</span><span>€ ${d.baseImp.toFixed(2)}</span></div></div>
+        <div class="tax-group"><h4>Imposte & Casse</h4><div class="tax-item"><span>Imposta Sost. (${params.tasse}%)</span><span class="negative">- € ${d.imposta.toFixed(2)}</span></div><div class="tax-item"><span>CIPAG Sogg. (${params.cipag}%)</span><span class="negative">- € ${d.cipagSogg.toFixed(2)}</span></div></div>
+        <div class="tax-group"><h4>Spese Interne</h4><div class="tax-item"><span>Fisse Studio/Ordine</span><span class="negative">- € ${(params.comm + params.ordine).toFixed(2)}</span></div><div class="tax-item"><span>Spese di Viaggio</span><span class="negative">- € ${d.speseVive.toFixed(2)}</span></div></div>
+        <div class="tax-group"><h4>Risultato</h4><div class="tax-item"><span>Buoni Pasto Extra</span><span class="positive">+ € ${d.buoniPasto.toFixed(2)}</span></div><div class="tax-item total-row"><span>NETTO MENSILE</span><span class="positive">€ ${d.netto.toFixed(2)}</span></div></div>
     `;
 
+    // Aggiorna Sezione 2: Tabella Attività in breve
     const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
-    if(sorted.length === 0) {
-        document.getElementById('log-table').innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 20px;">Nessun dato presente</td></tr>`;
-    } else {
-        document.getElementById('log-table').innerHTML = sorted.map((e, i) => {
-            const ore = calcolaOre(e.oraInizio, e.oraFine);
-            const totGiornata = e.compenso + e.extra - e.spese;
-            const pagariaGiorno = ore > 0 ? (totGiornata / ore) : 0;
-            const orarioStr = (e.oraInizio && e.oraFine) ? `${e.oraInizio} → ${e.oraFine}` : '—';
-            return `
-            <tr>
-                <td>${e.data.split('-').reverse().join('/')}</td>
-                <td>${e.luogo}</td>
-                <td><span class="badge badge-${e.tipo.toLowerCase()}">${e.tipo}</span></td>
-                <td style="font-size:12px; color:var(--text-muted)">${orarioStr}</td>
-                <td><span class="ore-badge">${ore > 0 ? formatOre(ore) : '—'}</span></td>
-                <td>€ ${e.compenso}</td>
-                <td>€ ${e.extra}</td>
-                <td>€ ${e.spese}</td>
-                <td style="font-weight:700">€ ${totGiornata.toFixed(2)}</td>
-                <td><span class="paga-oraria-badge">${ore > 0 ? '€ ' + pagariaGiorno.toFixed(2) + '/h' : '—'}</span></td>
-                <td><button onclick="deleteEntry(${entries.indexOf(e)})" style="background:none; border:none; color:var(--danger); font-size:16px; cursor:pointer">✕</button></td>
-            </tr>
-        `}).join('');
-    }
-    updateCharts(d);
-}
-
-window.saveParams = function() {
-    params = {
-        coeff: parseFloat(document.getElementById('p-coeff').value) || 0,
-        tasse: parseFloat(document.getElementById('p-tasse').value) || 0,
-        cipag: parseFloat(document.getElementById('p-cipag').value) || 0,
-        integ: parseFloat(document.getElementById('p-integ').value) || 0,
-        comm: parseFloat(document.getElementById('p-comm').value) || 0,
-        ordine: parseFloat(document.getElementById('p-ordine').value) || 0
-    };
-    render();
-    saveLocalData();
-}
-
-window.switchTab = function(t) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.getElementById('tab-btn-' + t).classList.add('active');
-    document.getElementById('section-current').style.display = t === 'current' ? 'block' : 'none';
-    document.getElementById('section-archive').style.display = t === 'archive' ? 'block' : 'none';
-    document.getElementById('section-params').style.display = t === 'params' ? 'block' : 'none';
-    if(t === 'archive') window.renderArchive();
-}
-
-window.archiveMonth = function() {
-    if(entries.length === 0) return alert("Niente da archiviare.");
-    const nome = new Date(entries[0].data).toLocaleString('it-IT', { month: 'long', year: 'numeric' }).toUpperCase();
-    if(confirm(`Archiviare il mese di ${nome}?`)) {
-        archive.push({ nome, dati: [...entries] });
-        entries = [];
-        viewName = "Mese Corrente";
-        render();
-        saveLocalData();
-    }
-}
-
-window.renderArchive = function() {
-    const container = document.getElementById('archive-list');
-    if (archive.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding: 20px;">Archivio vuoto</div>`;
-        return;
-    }
-    container.innerHTML = [...archive].reverse().map((m, i) => {
-        const stats = calculate(m.dati);
-        const idx = archive.length - 1 - i;
-        return `
-            <div class="archive-item">
-                <div onclick="loadArchive(${idx})" style="cursor:pointer; flex-grow:1">
-                    <h3 style="color:var(--primary); margin-bottom:5px;">${m.nome}</h3>
-                    <span style="font-size:14px;">
-                        Netto: <strong style="color:white">€ ${stats.netto.toFixed(2)}</strong>
-                        &nbsp;|&nbsp; Ore: <strong style="color:var(--secondary)">${formatOre(stats.totalOre)}</strong>
-                        &nbsp;|&nbsp; €/h netto: <strong style="color:var(--primary)">€ ${stats.pagariaNet.toFixed(2)}</strong>
-                    </span>
-                </div>
-                <button class="btn btn-danger" style="padding:8px 12px; font-size:12px; font-weight:bold" onclick="deleteArchive(${idx})">X</button>
-            </div>
-        `;
+    document.getElementById('log-table').innerHTML = sorted.length === 0 ? `<tr><td colspan="10" style="text-align:center; padding:15px;">Nessuna attività inserita questo mese.</td></tr>` : sorted.map(e => {
+        const ore = calcolaOre(e.oraInizio, e.oraFine);
+        const l = e.tipo === 'Ufficio' ? e.compenso : (e.compenso + e.extra);
+        const bImp = l * (params.coeff/100);
+        const netInGiorno = (l - (bImp * (params.tasse/100)) - (bImp * (params.cipag/100)) - e.spese);
+        return `<tr>
+            <td>${e.data.split('-').reverse().join('/')}</td>
+            <td><strong>${e.luogo}</strong></td>
+            <td><span class="badge badge-${e.tipo.toLowerCase()}">${e.tipo}</span></td>
+            <td style="color:var(--text-muted)">${e.oraInizio} - ${e.oraFine}</td>
+            <td><span style="color:var(--accent); font-weight:700">${formatOre(ore)}</span></td>
+            <td>€ ${e.compenso}</td><td>€ ${e.extra}</td><td>€ ${e.spese}</td>
+            <td style="font-weight:700; color:var(--primary)">€ ${netInGiorno.toFixed(2)}</td>
+            <td><button onclick="deleteEntry(${entries.indexOf(e)})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;">Elimina</button></td>
+        </tr>`
     }).join('');
-}
 
-window.loadArchive = function(idx) {
-    if(confirm("Caricare questo archivio sovrascriverà la dashboard temporanea. Procedere?")) {
-        entries = [...archive[idx].dati];
-        viewName = archive[idx].nome + " (ARCHIVIO)";
-        window.switchTab('current');
-        render();
-        saveLocalData();
-    }
-}
-
-window.deleteArchive = function(idx) {
-    if(confirm("Eliminare definitivamente questo mese dall'archivio?")) {
-        archive.splice(idx, 1);
-        window.renderArchive();
-        saveLocalData();
-    }
+    updateCharts(d);
+    generateAIInsights(d);
 }
 
 window.addEntry = function() {
-    const oraInizio = document.getElementById('inp-ora-inizio').value;
-    const oraFine = document.getElementById('inp-ora-fine').value;
-    if (oraInizio && oraFine && oraInizio >= oraFine) {
-        return alert("L'ora di fine deve essere successiva all'ora di inizio.");
-    }
-    const e = {
-        data: document.getElementById('inp-data').value,
-        luogo: document.getElementById('inp-luogo').value,
-        tipo: document.getElementById('inp-tipo').value,
-        oraInizio, oraFine,
-        compenso: parseFloat(document.getElementById('inp-compenso').value) || 0,
-        extra: parseFloat(document.getElementById('inp-extra').value) || 0,
-        spese: parseFloat(document.getElementById('inp-spese').value) || 0
-    };
-    if(!e.data || !e.luogo) return alert("Inserisci data e località");
-    entries.push(e);
+    const d = document.getElementById('inp-data').value;
+    const l = document.getElementById('inp-luogo').value;
+    const t = document.getElementById('inp-tipo').value;
+    const i = document.getElementById('inp-ora-inizio').value;
+    const f = document.getElementById('inp-ora-fine').value;
+    const c = parseFloat(document.getElementById('inp-compenso').value)||0;
+    const ex = parseFloat(document.getElementById('inp-extra').value)||0;
+    const s = parseFloat(document.getElementById('inp-spese').value)||0;
+
+    if(!d || !l) return alert("Per favore, inserisci almeno la data e la località!");
+    if(i && f && i >= f) return alert("L'orario di inizio deve essere prima dell'orario di fine!");
+
+    entries.push({ data: d, luogo: l, tipo: t, oraInizio: i, oraFine: f, compenso: c, extra: ex, spese: s });
     document.getElementById('inp-luogo').value = '';
     document.getElementById('inp-spese').value = '0';
-    render();
-    saveLocalData();
+    render(); saveToStorage();
 }
 
-window.deleteEntry = function(i) {
-    if(confirm("Eliminare questa giornata?")) {
-        entries.splice(i, 1);
-        render();
-        saveLocalData();
+window.deleteEntry = function(index) {
+    if(confirm("Vuoi cancellare questa giornata lavorativa?")) {
+        entries.splice(index, 1);
+        render(); saveToStorage();
     }
 }
 
@@ -572,44 +345,138 @@ window.updateDefaultExtra = function() {
     document.getElementById('inp-extra').value = (tipo === 'Trasferta') ? 20 : 8;
 }
 
+window.saveParams = function() {
+    params = {
+        coeff: parseFloat(document.getElementById('p-coeff').value)||0,
+        tasse: parseFloat(document.getElementById('p-tasse').value)||0,
+        cipag: parseFloat(document.getElementById('p-cipag').value)||0,
+        integ: parseFloat(document.getElementById('p-integ').value)||0,
+        comm: parseFloat(document.getElementById('p-comm').value)||0,
+        ordine: parseFloat(document.getElementById('p-ordine').value)||0
+    };
+    render(); saveToStorage();
+}
+
+// Sezione 3: Logica di Archivio e Backup CSV
+window.archiveMonth = function() {
+    if(entries.length === 0) return alert("Non ci sono dati da archiviare nel mese corrente!");
+    const nomeMese = new Date(entries[0].data).toLocaleString('it-IT', { month: 'long', year: 'numeric' }).toUpperCase();
+    if(confirm(`Sei sicuro di voler archiviare il mese di ${nomeMese}? I dati correnti verranno azzerati per iniziare un nuovo mese.`)) {
+        archive.push({ nome: nomeMese, dati: [...entries] });
+        entries = [];
+        viewName = "Mese Corrente";
+        render(); saveToStorage();
+    }
+}
+
+window.renderArchive = function() {
+    const container = document.getElementById('archive-list');
+    if(archive.length === 0) { container.innerHTML = `<p style="color:var(--text-muted)">Nessun mese salvato in archivio.</p>`; return; }
+    container.innerHTML = [...archive].reverse().map((m, i) => {
+        const c = calculate(m.dati);
+        const realIndex = archive.length - 1 - i;
+        return `<div class="archive-item">
+            <div>
+                <h4 style="color:var(--primary); font-size:16px;">${m.nome}</h4>
+                <p style="font-size:12px; color:var(--text-muted)">Netto Reale: <strong>€ ${c.netto.toFixed(2)}</strong> | Ore: <strong>${formatOre(c.totalOre)}</strong> | Giorni: <strong>${m.dati.length}</strong></p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="loadArchive(${realIndex})">Vedi</button>
+                <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="deleteArchive(${realIndex})">X</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+window.loadArchive = function(index) {
+    entries = [...archive[index].dati];
+    viewName = archive[index].nome + " (Archivio)";
+    render();
+    alert(`Stai visualizzando l'archivio di: ${archive[index].nome}. Puoi vedere i grafici e dati nella scheda Dashboard.`);
+}
+
+window.deleteArchive = function(index) {
+    if(confirm("Eliminare definitivamente questo mese archiviato?")) {
+        archive.splice(index, 1);
+        window.renderArchive(); saveToStorage();
+    }
+}
+
+window.exportToCSV = function() {
+    let csv = "Sezione;Data;Localita;Tipo;Ora Inizio;Ora Fine;Compenso;Extra;Spese\n";
+    entries.forEach(e => {
+        csv += `Mese Corrente;${e.data};"${e.luogo}";${e.tipo};${e.oraInizio};${e.oraFine};${e.compenso};${e.extra};${e.spese}\n`;
+    });
+    archive.forEach(m => {
+        m.dati.forEach(e => {
+            csv += `${m.nome};${e.data};"${e.luogo}";${e.tipo};${e.oraInizio};${e.oraFine};${e.compenso};${e.extra};${e.spese}\n`;
+        });
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "GeoDash_Backup_Dati.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Sezione 5: Logica Suggerimenti AI Interni
+function generateAIInsights(d) {
+    const box = document.getElementById('ai-insights');
+    if(entries.length === 0) { box.innerHTML = "Aggiungi delle attività nel mese attuale per permettere all'AI di calcolare le statistiche."; return; }
+    
+    const pagaOrariaNetta = d.totalOre > 0 ? (d.netto / d.totalOre) : 0;
+    const incidenzaTasse = d.lordoFatturabile > 0 ? (((d.imposta + d.cipagSogg) / d.lordoFatturabile) * 100) : 0;
+    
+    let html = `<div style="margin-bottom:15px; font-weight:bold; color:white;">Report Ottimizzazione IVA ed Efficienza:</div>`;
+    html += `<div class="ai-bullet"><strong>Redditività Oraria:</strong> Il tuo guadagno netto reale "in tasca" è di <strong>€ ${pagaOrariaNetta.toFixed(2)} all'ora</strong>.</div>`;
+    html += `<div class="ai-bullet"><strong>Incidenza Fiscale:</strong> Tra Tasse e Cassa Previdenziale stai accantonando il <strong>${incidenzaTasse.toFixed(1)}%</strong> del tuo fatturato totale.</div>`;
+    
+    if(d.nTrasferte > d.nUfficio) {
+        html += `<div class="ai-bullet"><strong>Strategia Trasferte:</strong> Questo mese preferisci le trasferte (${d.nTrasferte}). Ricorda che i 20€ extra di trasferta aumentano il tuo lordo imponibile. Se possibile, valuta di convertire parte dei rimborsi in indennità chilometriche documentate se superi i massimali.</div>`;
+    } else {
+        html += `<div class="ai-bullet"><strong>Strategia Ufficio:</strong> Lavorando molto in Ufficio, i tuoi Buoni Pasto da 8€ non concorrono a formare il reddito imponibile nel forfettario. Questa è un'ottima strategia di ottimizzazione legale delle entrate!</div>`;
+    }
+
+    if(d.speseVive > (d.lordoFatturabile * 0.1)) {
+        html += `<div class="ai-bullet" style="color:var(--accent)"><strong>Allarme Spese:</strong> Le tue spese di viaggio reali rappresentano oltre il 10% del fatturato. Nel regime forfettario non puoi scaricare le spese reali. Cerca di rinegoziare la tariffa base delle giornate per coprire l'alto costo del carburante/auto.</div>`;
+    }
+    
+    box.innerHTML = html;
+}
+
+// Logica di rendering dei grafici Chart.js
 function updateCharts(d) {
-    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' } }, x: { ticks: { color: '#9ca3af' } } } };
+    const chartOpt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#222' } }, x: { ticks: { color: '#9ca3af' }, grid: { display: false } } } };
     if(charts.b) charts.b.destroy(); if(charts.p) charts.p.destroy(); if(charts.d) charts.d.destroy();
     
     const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
-    const labelsBar = sorted.length > 0 ? sorted.map(e => e.data.split('-')[2]) : ['Nessun dato'];
-    const dataBar = sorted.length > 0 ? sorted.map(e => calcolaOre(e.oraInizio, e.oraFine)) : [0];
+    const labels = sorted.map(e => e.data.split('-')[2]);
+    const oreDati = sorted.map(e => calcolaOre(e.oraInizio, e.oraFine));
 
     charts.b = new Chart(document.getElementById('barChart'), {
         type: 'bar',
-        data: { labels: labelsBar, datasets: [{ data: dataBar, backgroundColor: '#3b82f6', label: 'Ore' }] },
-        options: { ...opt, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => formatOre(ctx.raw) } } } }
+        data: { labels: labels.length ? labels : ['00'], datasets: [{ data: oreDati.length ? oreDati : [0], backgroundColor: '#3b82f6' }] },
+        options: chartOpt
     });
     
     charts.p = new Chart(document.getElementById('pieChart'), {
         type: 'doughnut',
-        data: { labels: ['Ufficio', 'Trasferta'], datasets: [{ data: [entries.filter(e=>e.tipo==='Ufficio').length, entries.filter(e=>e.tipo==='Trasferta').length], backgroundColor: ['#3b82f6','#10b981'], borderWidth: 0 }] },
+        data: { labels: ['Ufficio', 'Trasferta'], datasets: [{ data: [d.nUfficio, d.nTrasferte], backgroundColor: ['#3b82f6','#10b981'], borderWidth: 0 }] },
         options: { responsive: true, maintainAspectRatio: false }
     });
     
     charts.d = new Chart(document.getElementById('donutChart'), {
         type: 'pie',
-        data: { labels: ['Netto','Tasse','Costi'], datasets: [{ data: [Math.max(0, d.netto), d.imposta+d.cipagSogg, params.comm+params.ordine+d.speseVive], backgroundColor: ['#10b981','#ef4444','#f59e0b'], borderWidth: 0 }] },
+        data: { labels: ['Netto','Tasse','Costi/Spese'], datasets: [{ data: [Math.max(0, d.netto), d.imposta+d.cipagSogg, params.comm+params.ordine+d.speseVive], backgroundColor: ['#10b981','#ef4444','#f59e0b'], borderWidth: 0 }] },
         options: { responsive: true, maintainAspectRatio: false }
     });
 }
 
-// REGISTRAZIONE DEL SERVICE WORKER PER FUNZIONAMENTO OFFLINE
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker Registrato con successo!', reg.scope))
-            .catch(err => console.error('Errore registrazione Service Worker:', err));
-    });
-}
-
 document.getElementById('inp-data').valueAsDate = new Date();
-loadLocalData();
+loadFromStorage();
 </script>
 </body>
 </html>

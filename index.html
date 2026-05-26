@@ -11,63 +11,63 @@
 
     <style>
         :root {
-            --ios-bg: #000000;
-            --ios-card: #1c1c1e;
-            --ios-card-inner: #2c2c2e;
-            --primary: #34c759; /* Verde Apple */
-            --secondary: #0a84ff; /* Blu Apple */
-            --accent: #ff9f0a; /* Arancione Apple */
-            --danger: #ff453a; /* Rosso Apple */
-            --text-main: #ffffff;
-            --text-muted: #8e8e93;
-            --border: #38383a;
-            --radius-ios: 14px;
+            --bg-main: #000000;
+            --bg-card: #111827;
+            --bg-card-inner: #1f2937;
+            --primary: #10b981;    /* Verde Smeraldo Originale */
+            --secondary: #3b82f6;  /* Blu Elettrico Originale */
+            --accent: #f59e0b;     /* Arancione Originale */
+            --danger: #ef4444;     /* Rosso Originale */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --radius-ios: 12px;
             --radius-round: 24px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         
         body { 
-            background-color: var(--ios-bg); 
+            background-color: var(--bg-main); 
             color: var(--text-main); 
-            padding-bottom: 100px; /* Spazio per la Tab Bar in basso */
+            padding-bottom: 90px; /* Spazio per la barra inferiore fissa */
             padding-top: env(safe-area-inset-top);
         }
 
         .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
         
         .ios-header { margin-bottom: 1.5rem; padding-top: 10px; }
-        .ios-header h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
-        .ios-subtitle { font-size: 13px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .ios-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
+        .ios-subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px; }
 
         /* Pannelli delle Sezioni */
-        .section-panel { display: none; animation: iosFade 0.25s ease-in-out; }
+        .section-panel { display: none; animation: iosFade 0.2s ease-in-out; }
         .section-panel.active { display: block; }
-        @keyframes iosFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes iosFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Card in stile iOS */
-        .ios-card { background: var(--ios-card); border-radius: var(--radius-ios); padding: 1.25rem; margin-bottom: 1.25rem; border: 1px solid rgba(255,255,255,0.05); }
-        .ios-card-title { font-size: 17px; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
+        /* Card (Stile Originale) */
+        .ios-card { background: var(--bg-card); border-radius: var(--radius-ios); padding: 1.25rem; margin-bottom: 1.25rem; border: 1px solid var(--border); }
+        .ios-card-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
 
         /* Griglia dei contatori numerici */
         .ios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 1.25rem; }
-        .ios-stat-box { background: var(--ios-card); border-radius: var(--radius-ios); padding: 1rem; border: 1px solid rgba(255,255,255,0.05); }
-        .ios-stat-box .label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
-        .ios-stat-box .value { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .ios-stat-box { background: var(--bg-card); border-radius: var(--radius-ios); padding: 1rem; border: 1px solid var(--border); }
+        .ios-stat-box .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.3px; }
+        .ios-stat-box .value { font-size: 22px; font-weight: 700; }
 
-        /* Elementi lista/tabelle stile iOS Form */
-        .ios-list { background: var(--ios-card); border-radius: var(--radius-ios); overflow: hidden; margin-bottom: 1.25rem; }
-        .ios-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 15px; }
+        /* Elementi lista stile iOS Form */
+        .ios-list { background: var(--bg-card); border-radius: var(--radius-ios); overflow: hidden; margin-bottom: 1.25rem; }
+        .ios-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
         .ios-list-item:last-child { border-bottom: none; }
         .ios-list-item .left-info { display: flex; flex-direction: column; gap: 2px; }
         .ios-list-item .main-txt { font-weight: 600; }
         .ios-list-item .sub-txt { font-size: 12px; color: var(--text-muted); }
-        .ios-list-item .right-val { font-family: -apple-system, monospace; font-weight: 600; text-align: right; }
+        .ios-list-item .right-val { font-family: monospace; font-weight: 600; text-align: right; font-size: 14px; }
 
-        /* Pulsanti Rotondi (iPhone Style) */
+        /* Pulsanti Rotondi */
         .btn-round { 
             display: inline-block; width: 100%; padding: 14px; border-radius: var(--radius-round); 
-            font-size: 16px; font-weight: 600; border: none; cursor: pointer; 
+            font-size: 15px; font-weight: 700; border: none; cursor: pointer; 
             text-align: center; transition: background 0.2s, transform 0.1s; background: var(--secondary); color: white;
         }
         .btn-round:active { transform: scale(0.98); opacity: 0.9; }
@@ -77,35 +77,37 @@
 
         /* Input Form arrotondati */
         .ios-input-group { margin-bottom: 12px; }
-        .ios-input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-left: 4px; margin-bottom: 4px; font-weight: 500; }
-        .ios-input { width: 100%; padding: 12px 16px; background: var(--ios-card-inner); border: 1px solid var(--border); border-radius: var(--radius-ios); color: white; font-size: 15px; outline: none; }
+        .ios-input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-left: 4px; margin-bottom: 4px; text-transform: uppercase; }
+        .ios-input { width: 100%; padding: 12px 16px; background: var(--bg-card-inner); border: 1px solid var(--border); border-radius: var(--radius-ios); color: white; font-size: 14px; outline: none; }
         .ios-input:focus { border-color: var(--secondary); }
 
         /* Grafici */
         .chart-container { height: 160px; position: relative; margin-bottom: 10px; }
 
-        /* MAPPA */
-        #map { width: 100%; height: 350px; border-radius: var(--radius-ios); border: 1px solid var(--border); margin-top: 10px; z-index: 1; }
+        /* Mappa */
+        #map { width: 100%; height: 340px; border-radius: var(--radius-ios); border: 1px solid var(--border); margin-top: 10px; z-index: 1; }
 
         /* AI Card */
-        .ai-bubble-box { background: linear-gradient(135deg, #14142b 0%, #0c0c14 100%); border: 1px solid #5856d6; padding: 1.25rem; border-radius: var(--radius-ios); font-size: 14px; line-height: 1.5; }
-        .ai-node { margin-bottom: 10px; padding-left: 18px; position: relative; color: #d1d1d6; }
-        .ai-node::before { content: '✦'; position: absolute; left: 0; color: #5856d6; font-weight: bold; }
+        .ai-bubble-box { background: var(--bg-card); border: 1px solid var(--secondary); padding: 1.25rem; border-radius: var(--radius-ios); font-size: 14px; line-height: 1.5; }
+        .ai-node { margin-bottom: 10px; padding-left: 18px; position: relative; color: var(--text-main); }
+        .ai-node::before { content: '•'; position: absolute; left: 0; color: var(--secondary); font-weight: bold; font-size: 16px; top: -2px; }
 
-        /* BARRA DI NAVIGAZIONE IN BASSO (TAB BAR IPHONE) */
+        /* BARRA DI NAVIGAZIONE IN BASSO (TAB BAR RIGIDA MINIMALE) */
         .ios-tab-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
-            background: rgba(28, 28, 30, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
+            background: #111827; border-top: 1px solid var(--border); display: flex; justify-content: space-around;
             padding-bottom: env(safe-area-inset-bottom); z-index: 999;
         }
         .ios-tab-item {
             background: none; border: none; color: var(--text-muted);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 500; cursor: pointer; padding: 6px 0; width: 20%; transition: color 0.2s;
+            font-size: 10px; font-weight: 600; cursor: pointer; padding: 4px 0; width: 20%; transition: color 0.15s;
         }
-        .ios-tab-item.active { color: var(--secondary); }
-        .ios-tab-icon { font-size: 22px; margin-bottom: 3px; }
+        .ios-tab-item.active { color: var(--primary); }
+        .ios-tab-icon-svg { width: 20px; height: 20px; margin-bottom: 4px; fill: currentColor; }
+        
+        .negative { color: var(--danger); }
+        .positive { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -120,7 +122,7 @@
         <div class="ios-grid" id="dash-cards-grid"></div>
         
         <div class="ios-card">
-            <div class="ios-card-title">Dettaglio Fiscale</div>
+            <div class="ios-card-title">Dettaglio Analitico Fiscale</div>
             <div class="ios-list" id="dash-tax-list"></div>
         </div>
 
@@ -129,7 +131,7 @@
             <div class="chart-container"><canvas id="barChart"></canvas></div>
         </div>
         <div class="ios-card">
-            <div class="ios-card-title">Ripartizione Costi/Netto</div>
+            <div class="ios-card-title">Ripartizione Finanziaria</div>
             <div class="chart-container"><canvas id="donutChart"></canvas></div>
         </div>
     </div>
@@ -153,74 +155,78 @@
                 <div class="ios-input-group"><label>Fine</label><input type="time" id="inp-ora-fine" value="17:00" class="ios-input"></div>
             </div>
             <div class="ios-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="ios-input-group"><label>Tariffa (€)</label><input type="number" id="inp-compenso" value="105" class="ios-input"></div>
+                <div class="ios-input-group"><label>Compenso (€)</label><input type="number" id="inp-compenso" value="105" class="ios-input"></div>
                 <div class="ios-input-group"><label>Extra (€)</label><input type="number" id="inp-extra" value="20" class="ios-input"></div>
                 <div class="ios-input-group"><label>Spese (€)</label><input type="number" id="inp-spese" value="0" class="ios-input"></div>
             </div>
-            <button class="btn-round success" onclick="addEntry()" style="margin-top:8px;">Salva nel Registro</button>
+            <button class="btn-round success" onclick="addEntry()">Salva Giornata</button>
         </div>
 
         <div class="ios-card">
-            <div class="ios-card-title">Cronologia Mensile</div>
+            <div class="ios-card-title">Attività del Mese</div>
             <div class="ios-list" id="activity-ios-list"></div>
         </div>
     </div>
 
     <div id="panel-mappa" class="section-panel">
         <div class="ios-card">
-            <div class="ios-card-title">Mappa dei Lavori e Trasferte</div>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Vedi la distribuzione geografica dei tuoi cantieri e uffici nel mondo. I pin vengono estratti in tempo reale dalle località inserite.</p>
+            <div class="ios-card-title">Ubicazione Attività</div>
             <div id="map"></div>
         </div>
     </div>
 
     <div id="panel-impostazioni" class="section-panel">
         <div class="ios-card">
-            <div class="ios-card-title" style="color:var(--accent);">Backup e Chiusura</div>
+            <div class="ios-card-title">Archivio e Backup</div>
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <button class="btn-round success" onclick="archiveMonth()">Archivia Mese Attuale</button>
-                <button class="btn-round" onclick="exportToCSV()">Esporta Tutto in Excel (CSV)</button>
+                <button class="btn-round" onclick="exportToCSV()">Esporta Dati (CSV)</button>
             </div>
         </div>
 
         <div class="ios-card">
             <div class="ios-card-title">Parametri Fiscali</div>
             <div class="ios-input-group"><label>Coefficiente Redditività (%)</label><input type="number" id="p-coeff" value="78" class="ios-input" onchange="saveParams()"></div>
-            <div class="ios-input-group"><label>Imposta Sostitutiva Forfettario (%)</label><input type="number" id="p-tasse" value="5" class="ios-input" onchange="saveParams()"></div>
-            <div class="ios-input-group"><label>Cassa CIPAG Soggettivo (%)</label><input type="number" id="p-cipag" value="12" class="ios-input" onchange="saveParams()"></div>
+            <div class="ios-input-group"><label>Imposta Sostitutiva (%)</label><input type="number" id="p-tasse" value="5" class="ios-input" onchange="saveParams()"></div>
+            <div class="ios-input-group"><label>Contributo CIPAG (%)</label><input type="number" id="p-cipag" value="12" class="ios-input" onchange="saveParams()"></div>
             <div class="ios-input-group"><label>Commercialista Mensile (€)</label><input type="number" id="p-comm" value="60" class="ios-input" onchange="saveParams()"></div>
             <div class="ios-input-group"><label>Quota Ordine Mensile (€)</label><input type="number" id="p-ordine" value="15.42" class="ios-input" onchange="saveParams()"></div>
         </div>
 
         <div class="ios-card">
-            <div class="ios-card-title">Storico Mesi Chiusi</div>
+            <div class="ios-card-title">Storico Mesi Archiviati</div>
             <div class="ios-list" id="archive-ios-list"></div>
         </div>
     </div>
 
     <div id="panel-ai" class="section-panel">
         <div class="ios-card">
-            <div class="ios-card-title" style="color:#8e8e93;">✦ Analisi Strategica</div>
-            <div class="ai-bubble-box" id="ai-insights-box">Inserisci ore lavorative per attivare i suggerimenti dell'assistente AI locale.</div>
+            <div class="ios-card-title">Analisi Suggerimenti AI</div>
+            <div class="ai-bubble-box" id="ai-insights-box">Aggiungere attività correnti per elaborare l'analisi dei parametri.</div>
         </div>
     </div>
 </div>
 
 <div class="ios-tab-bar">
     <button class="ios-tab-item active" onclick="navTo('panel-dashboard', 'Dashboard', this)">
-        <div class="ios-tab-icon">📊</div><div>Dashboard</div>
+        <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        <div>Dashboard</div>
     </button>
     <button class="ios-tab-item" onclick="navTo('panel-attivita', 'Attività', this)">
-        <div class="ios-tab-icon">✍️</div><div>Attività</div>
+        <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <div>Attività</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-mappa', 'Mappa Mondo', this); initMapOnce();">
-        <div class="ios-tab-icon">🗺️</div><div>Mappa</div>
+    <button class="ios-tab-item" onclick="navTo('panel-mappa', 'Mappa', this); initMapOnce();">
+        <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+        <div>Mappa</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-impostazioni', 'Impostazioni', this)">
-        <div class="ios-tab-icon">⚙️</div><div>Config</div>
+    <button class="ios-tab-item" onclick="navTo('panel-impostazioni', 'Configurazione', this)">
+        <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <div>Config</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-ai', 'Assistente AI', this)">
-        <div class="ios-tab-icon">🔮</div><div>Intelligence</div>
+    <button class="ios-tab-item" onclick="navTo('panel-ai', 'Intelligence', this)">
+        <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm1-6h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+        <div>AI</div>
     </button>
 </div>
 
@@ -235,8 +241,7 @@ let mapMarkers = [];
 
 const FALLBACK_DATA = [
   {data:"2026-05-01",luogo:"Reggio Emilia",tipo:"Trasferta",oraInizio:"08:00",oraFine:"17:00",compenso:105,extra:20,spese:5},
-  {data:"2026-05-12",luogo:"Modena Centro",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:0},
-  {data:"2026-05-20",luogo:"Milano Duomo",tipo:"Trasferta",oraInizio:"08:30",oraFine:"17:30",compenso:110,extra:20,spese:15}
+  {data:"2026-05-12",luogo:"Modena Centro",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:0}
 ];
 
 function calcolaOre(inizio, fine) {
@@ -252,15 +257,11 @@ function formatOre(ore) {
     return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
-// Navigazione Menu in basso stile iPhone
 function navTo(panelId, titleText, btnEl) {
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.ios-tab-item').forEach(t => t.classList.remove('active'));
-    
-    document.getElementById(panelId).classWithAnim = "section-panel active";
     document.getElementById(panelId).classList.add('active');
     btnEl.classList.add('active');
-    
     document.getElementById('ios-main-title').innerText = titleText;
     if(panelId === 'panel-impostazioni') renderArchive();
 }
@@ -308,24 +309,21 @@ function render() {
     const d = calculate(entries);
     document.getElementById('ios-view-ctx').innerText = viewName.toUpperCase();
 
-    // Cards Sezione 1
     document.getElementById('dash-cards-grid').innerHTML = `
-        <div class="ios-stat-box"><div class="label">Lordo Mensile</div><div class="value">€ ${d.lordoFatturabile.toFixed(2)}</div></div>
-        <div class="ios-stat-box"><div class="label">Netto Disponibile</div><div class="value" style="color:var(--primary)">€ ${d.netto.toFixed(2)}</div></div>
-        <div class="ios-stat-box"><div class="label">Ore Totali</div><div class="value" style="color:var(--accent)">${formatOre(d.totalOre)}</div></div>
-        <div class="ios-stat-box"><div class="label">Spese Sostenute</div><div class="value" style="color:var(--danger)">€ ${d.speseVive.toFixed(2)}</div></div>
+        <div class="ios-stat-box"><div class="label">Lordo Totale</div><div class="value">€ ${d.lordoFatturabile.toFixed(2)}</div></div>
+        <div class="ios-stat-box"><div class="label">Netto Reale</div><div class="value" style="color:var(--primary)">€ ${d.netto.toFixed(2)}</div></div>
+        <div class="ios-stat-box"><div class="label">Ore Lavorate</div><div class="value" style="color:var(--secondary)">${formatOre(d.totalOre)}</div></div>
+        <div class="ios-stat-box"><div class="label">Spese Vive</div><div class="value" style="color:var(--danger)">€ ${d.speseVive.toFixed(2)}</div></div>
     `;
 
-    // Lista Dettaglio Tasse Sezione 1
     document.getElementById('dash-tax-list').innerHTML = `
-        <div class="ios-list-item"><span>Base Calcolo Imponibile (${params.coeff}%)</span><span class="right-val">€ ${d.baseImp.toFixed(2)}</span></div>
+        <div class="ios-list-item"><span>Base Imponibile (${params.coeff}%)</span><span class="right-val">€ ${d.baseImp.toFixed(2)}</span></div>
         <div class="ios-list-item"><span>Imposta Sostitutiva (${params.tasse}%)</span><span class="right-val negative">- € ${d.imposta.toFixed(2)}</span></div>
-        <div class="ios-list-item"><span>CIPAG Cassa (${params.cipag}%)</span><span class="right-val negative">- € ${d.cipagSogg.toFixed(2)}</span></div>
-        <div class="ios-list-item"><span>Commercialista + Ordine Fisso</span><span class="right-val negative">- € ${(params.comm + params.ordine).toFixed(2)}</span></div>
-        <div class="ios-list-item"><span>Indennità / Buoni Pasto (+)</span><span class="right-val positive">+ € ${d.buoniPasto.toFixed(2)}</span></div>
+        <div class="ios-list-item"><span>CIPAG Previdenza (${params.cipag}%)</span><span class="right-val negative">- € ${d.cipagSogg.toFixed(2)}</span></div>
+        <div class="ios-list-item"><span>Costi Fissi Gestione</span><span class="right-val negative">- € ${(params.comm + params.ordine).toFixed(2)}</span></div>
+        <div class="ios-list-item"><span>Indennità / Extra Totali</span><span class="right-val positive">+ € ${d.buoniPasto.toFixed(2)}</span></div>
     `;
 
-    // Lista Attività Sezione 2
     const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
     document.getElementById('activity-ios-list').innerHTML = sorted.length === 0 ? `<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:14px;">Nessuna attività registrata.</div>` : sorted.map(e => {
         const ore = calcolaOre(e.oraInizio, e.oraFine);
@@ -334,18 +332,18 @@ function render() {
         <div class="ios-list-item">
             <div class="left-info">
                 <span class="main-txt">${e.luogo} <small style="color:${e.tipo==='Ufficio'?'var(--secondary)':'var(--primary)'}">(${e.tipo})</small></span>
-                <span class="sub-txt">${e.data.split('-').reverse().join('/')} | Ora: ${e.oraInizio}-${e.oraFine} (${formatOre(ore)})</span>
+                <span class="sub-txt">${e.data.split('-').reverse().join('/')} | Ore: ${formatOre(ore)}</span>
             </div>
             <div style="display:flex; align-items:center; gap:12px;">
                 <span class="right-val">€ ${tGiorno.toFixed(2)}</span>
-                <button onclick="deleteEntry(${entries.indexOf(e)})" style="background:none; border:none; color:var(--danger); font-weight:bold; font-size:18px; cursor:pointer;">✕</button>
+                <button onclick="deleteEntry(${entries.indexOf(e)})" style="background:none; border:none; color:var(--danger); font-weight:bold; font-size:16px; cursor:pointer;">✕</button>
             </div>
         </div>`
     }).join('');
 
     updateCharts(d);
     generateAIInsights(d);
-    if(map) updateMapMarkers(); // Aggiorna i pin del mondo se la mappa è attiva
+    if(map) updateMapMarkers();
 }
 
 window.addEntry = function() {
@@ -358,14 +356,14 @@ window.addEntry = function() {
     const ex = parseFloat(document.getElementById('inp-extra').value)||0;
     const s = parseFloat(document.getElementById('inp-spese').value)||0;
 
-    if(!d || !l) return alert("Compila la data e la località!");
+    if(!d || !l) return alert("Inserire data e località!");
     entries.push({ data: d, luogo: l, tipo: t, oraInizio: i, oraFine: f, compenso: c, extra: ex, spese: s });
     document.getElementById('inp-luogo').value = '';
     render(); saveToStorage();
 }
 
 window.deleteEntry = function(index) {
-    if(confirm("Eliminare questa giornata dal registro?")) {
+    if(confirm("Eliminare la giornata selezionata?")) {
         entries.splice(index, 1);
         render(); saveToStorage();
     }
@@ -386,71 +384,42 @@ window.saveParams = function() {
     render(); saveToStorage();
 }
 
-// Inizializzazione Mappa (Ubicazione attività nel mondo)
 function initMapOnce() {
-    if (map !== null) {
-        // Forza il ricalcolo delle dimensioni della mappa sul display del telefono
-        setTimeout(() => { map.invalidateSize(); }, 200);
-        return; 
-    }
-    
-    // Genera la mappa centrata di default in Italia/Europa
-    map = L.map('map').setView([42.0, 12.5], 5);
-    
-    // Layout mappa scuro per abbinarsi al tema iPhone scuro di GeoDash
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap &copy; CARTO'
-    }).addTo(map);
-
+    if (map !== null) { setTimeout(() => { map.invalidateSize(); }, 200); return; }
+    map = L.map('map').setView([42.8, 12.5], 5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
     updateMapMarkers();
 }
 
-// Funzione di geocodifica integrata e gratuita (Trova coordinate dalle parole digitate)
 async function updateMapMarkers() {
     if(!map) return;
-    
-    // Rimuove i vecchi marker
     mapMarkers.forEach(m => map.removeLayer(m));
     mapMarkers = [];
 
-    // Raggruppa le attività per località per non sovrapporre i punti
-    const localitaRaggruppate = {};
-    entries.forEach(e => {
-        if(!localitaRaggruppate[e.luogo]) localitaRaggruppate[e.luogo] = [];
-        localitaRaggruppate[e.luogo].push(e);
-    });
+    const grouped = {};
+    entries.forEach(e => { if(!grouped[e.luogo]) grouped[e.luogo] = []; grouped[e.luogo].push(e); });
 
-    for (let luogo in localitaRaggruppate) {
+    for (let luogo in grouped) {
         try {
-            // Chiamata di geolocalizzazione geografica gratuita a OpenStreetMap (Nominatim)
             const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(luogo)}&limit=1`);
             const data = await response.json();
-            
             if(data && data.length > 0) {
                 const lat = parseFloat(data[0].lat);
                 const lon = parseFloat(data[0].lon);
+                let somma = 0;
+                grouped[luogo].forEach(g => somma += (g.compenso + g.extra - g.spese));
                 
-                const giornate = localitaRaggruppate[luogo];
-                let infoFinanziariaHtml = `<b style="color:#000;">${luogo}</b><br/><span style="color:#666;">Attività: ${giornate.length}</span><br/>`;
-                let sommaFatturato = 0;
-                giornate.forEach(g => sommaFatturato += (g.compenso + g.extra - g.spese));
-                infoFinanziariaHtml += `<b>Totale Netto: € ${sommaFatturato.toFixed(2)}</b>`;
-
-                const marker = L.marker([lat, lon]).addTo(map).bindPopup(infoFinanziariaHtml);
+                const marker = L.marker([lat, lon]).addTo(map).bindPopup(`<b style="color:black">${luogo}</b><br/><span style="color:black">Totale Netto: € ${somma.toFixed(2)}</span>`);
                 mapMarkers.push(marker);
             }
-        } catch (err) {
-            console.error("Impossibile mappare la località: " + luogo, err);
-        }
+        } catch (err) { console.error(err); }
     }
 }
 
-// Archivio e Backup
 window.archiveMonth = function() {
-    if(entries.length === 0) return alert("Nessun dato da archiviare!");
+    if(entries.length === 0) return alert("Nessun dato presente.");
     const nomeMese = new Date(entries[0].data).toLocaleString('it-IT', { month: 'long', year: 'numeric' }).toUpperCase();
-    if(confirm(`Archiviare il mese di ${nomeMese}? La schermata principale verrà azzerata.`)) {
+    if(confirm(`Archiviare il mese di ${nomeMese}?`)) {
         archive.push({ nome: nomeMese, dati: [...entries] });
         entries = []; viewName = "Mese Corrente";
         render(); saveToStorage();
@@ -459,17 +428,17 @@ window.archiveMonth = function() {
 
 window.renderArchive = function() {
     const container = document.getElementById('archive-ios-list');
-    if(archive.length === 0) { container.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted);">Nessun archivio salvato.</div>`; return; }
+    if(archive.length === 0) { container.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted);">Archivio vuoto.</div>`; return; }
     container.innerHTML = [...archive].reverse().map((m, i) => {
         const c = calculate(m.dati); const realIdx = archive.length - 1 - i;
         return `
         <div class="ios-list-item">
             <div class="left-info">
                 <span class="main-txt" style="color:var(--primary)">${m.nome}</span>
-                <span class="sub-txt">${m.dati.length} giornate | Ore: ${formatOre(c.totalOre)}</span>
+                <span class="sub-txt">${m.dati.length} giorni | Ore: ${formatOre(c.totalOre)}</span>
             </div>
             <div style="display:flex; gap:8px;">
-                <button onclick="loadArchive(${realIdx})" style="background:var(--ios-card-inner); border:1px solid var(--border); color:white; padding:5px 10px; border-radius:8px; font-size:12px; font-weight:bold;">Vedi</button>
+                <button onclick="loadArchive(${realIdx})" style="background:var(--bg-card-inner); border:1px solid var(--border); color:white; padding:5px 10px; border-radius:8px; font-size:12px; font-weight:bold;">Vedi</button>
                 <button onclick="deleteArchive(${realIdx})" style="background:none; border:none; color:var(--danger); font-weight:bold; padding:0 5px;">✕</button>
             </div>
         </div>`;
@@ -484,7 +453,7 @@ window.loadArchive = function(idx) {
 }
 
 window.deleteArchive = function(index) {
-    if(confirm("Eliminare definitivamente questo mese archiviato?")) {
+    if(confirm("Eliminare permanentemente dall'archivio?")) {
         archive.splice(index, 1); window.renderArchive(); saveToStorage();
     }
 }
@@ -494,7 +463,7 @@ window.exportToCSV = function() {
     entries.forEach(e => { csv += `Corrente;${e.data};"${e.luogo}";${e.tipo};${e.oraInizio};${e.oraFine};${e.compenso};${e.extra};${e.spese}\n`; });
     archive.forEach(m => { m.dati.forEach(e => { csv += `${m.nome};${e.data};"${e.luogo}";${e.tipo};${e.oraInizio};${e.oraFine};${e.compenso};${e.extra};${e.spese}\n`; }); });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", "GeoDash_iOS_Backup.csv");
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", "GeoDash_Backup.csv");
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
 }
 
@@ -503,27 +472,24 @@ function generateAIInsights(d) {
     if(entries.length === 0) return;
     const pNetta = d.totalOre > 0 ? (d.netto / d.totalOre) : 0;
     let html = `<div class="ai-node"><b>Efficienza Oraria:</b> Generi un netto reale netto-tasse di <b>€ ${pNetta.toFixed(2)}/ora</b>.</div>`;
-    html += `<div class="ai-node"><b>Ubicazione Geografica:</b> Hai svolto attività in <b>${Object.keys(entries.reduce((acc,curr)=>{acc[curr.luogo]=1;return acc;},{})).length} località esterne</b> diverse questo mese. Mantenere le trasferte accorpate riduce l'incidenza delle spese di trasporto non deducibili.</div>`;
-    if(d.speseVive > 50) {
-        html += `<div class="ai-node" style="color:var(--accent);"><b>Ottimizzazione Costi:</b> Le spese vive stanno incidendo sui margini. Ricorda che nel regime forfettario non puoi detrarre le ricevute del carburante, valuta aumenti tariffari sui cantieri più distanti.</div>`;
-    }
+    html += `<div class="ai-node"><b>Distribuzione Territoriale:</b> Svolgi attività in <b>${Object.keys(entries.reduce((acc,curr)=>{acc[curr.luogo]=1;return acc;},{})).length} località esterne</b> diverse questo mese. Accorpare i viaggi riduce l'incidenza di spese non deducibili.</div>`;
     box.innerHTML = html;
 }
 
 function updateCharts(d) {
-    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#8e8e93' }, grid: { color: '#2c2c2e' } }, x: { ticks: { color: '#8e8e93' }, grid: { display: false } } } };
+    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#1f2937' } }, x: { ticks: { color: '#9ca3af' }, grid: { display: false } } } };
     if(charts.b) charts.b.destroy(); if(charts.d) charts.d.destroy();
     
     const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));
     charts.b = new Chart(document.getElementById('barChart'), {
         type: 'bar',
-        data: { labels: sorted.map(e => e.data.split('-')[2]), datasets: [{ data: sorted.map(e => calcolaOre(e.oraInizio, e.oraFine)), backgroundColor: '#0a84ff', borderRadius: 4 }] },
+        data: { labels: sorted.map(e => e.data.split('-')[2]), datasets: [{ data: sorted.map(e => calcolaOre(e.oraInizio, e.oraFine)), backgroundColor: '#3b82f6', borderRadius: 4 }] },
         options: opt
     });
     
     charts.d = new Chart(document.getElementById('donutChart'), {
         type: 'pie',
-        data: { labels: ['Netto','Tasse/Cassa','Fissi/Spese'], datasets: [{ data: [Math.max(0, d.netto), d.imposta+d.cipagSogg, params.comm+params.ordine+d.speseVive], backgroundColor: ['#34c759','#ff453a','#ff9f0a'], borderWidth: 0 }] },
+        data: { labels: ['Netto','Tasse/Cassa','Fissi/Spese'], datasets: [{ data: [Math.max(0, d.netto), d.imposta+d.cipagSogg, params.comm+params.ordine+d.speseVive], backgroundColor: ['#10b981','#ef4444','#f59e0b'], borderWidth: 0 }] },
         options: { responsive: true, maintainAspectRatio: false }
     });
 }

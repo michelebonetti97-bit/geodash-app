@@ -11,100 +11,112 @@
 
     <style>
         :root {
-            --bg-main: #000000;
-            --bg-card: #111827;
-            --bg-card-inner: #1f2937;
-            --primary: #10b981;    /* Verde Smeraldo Originale */
-            --secondary: #3b82f6;  /* Blu Elettrico Originale */
-            --accent: #f59e0b;     /* Arancione Originale */
-            --danger: #ef4444;     /* Rosso Originale */
-            --text-main: #f3f4f6;
+            --bg-main: #050505;
+            --bg-card: #141416;
+            --bg-card-inner: #1f1f23;
+            --primary: #10b981;    /* Verde Smeraldo GeoDash */
+            --secondary: #3b82f6;  /* Blu Elettrico */
+            --accent: #f59e0b;     /* Arancione */
+            --danger: #ef4444;     /* Rosso */
+            --text-main: #f9fafb;
             --text-muted: #9ca3af;
-            --border: #374151;
-            --radius-ios: 12px;
+            --border: #27272a;
+            --radius-ios: 16px;
             --radius-round: 24px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
         
         body { 
             background-color: var(--bg-main); 
             color: var(--text-main); 
-            padding-bottom: 90px; /* Spazio per la barra inferiore fissa */
+            padding-bottom: 90px; 
             padding-top: env(safe-area-inset-top);
         }
 
         .container { max-width: 600px; margin: 0 auto; padding: 1.25rem; }
         
-        .ios-header { margin-bottom: 1.5rem; padding-top: 10px; }
-        .ios-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
-        .ios-subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px; }
+        /* Header Logo Globale Fissato in Alto */
+        .ios-header { 
+            margin-bottom: 1.5rem; 
+            padding-top: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+        .ios-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
+        .ios-header h1 span { color: var(--primary); font-weight: 400; }
+        .ios-subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; background: var(--bg-card-inner); padding: 4px 10px; border-radius: 12px;}
 
-        /* Pannelli delle Sezioni */
-        .section-panel { display: none; animation: iosFade 0.2s ease-in-out; }
+        /* Titolo di Sezione */
+        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; margin-top: 10px; color: var(--text-main); }
+
+        .section-panel { display: none; animation: iosFade 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         .section-panel.active { display: block; }
-        @keyframes iosFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes iosFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Card (Stile Originale) */
-        .ios-card { background: var(--bg-card); border-radius: var(--radius-ios); padding: 1.25rem; margin-bottom: 1.25rem; border: 1px solid var(--border); }
-        .ios-card-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
+        /* Design delle Card migliorato */
+        .ios-card { background: var(--bg-card); border-radius: var(--radius-ios); padding: 1.25rem; margin-bottom: 1.25rem; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .ios-card-title { font-size: 16px; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
 
-        /* Griglia dei contatori numerici */
         .ios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 1.25rem; }
-        .ios-stat-box { background: var(--bg-card); border-radius: var(--radius-ios); padding: 1rem; border: 1px solid var(--border); }
-        .ios-stat-box .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.3px; }
-        .ios-stat-box .value { font-size: 22px; font-weight: 700; }
+        .ios-stat-box { background: var(--bg-card-inner); border-radius: 12px; padding: 1rem; border: 1px solid var(--border); }
+        .ios-stat-box .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.3px; font-weight: 600;}
+        .ios-stat-box .value { font-size: 22px; font-weight: 800; letter-spacing: -0.5px;}
 
-        /* Elementi lista stile iOS Form */
-        .ios-list { background: var(--bg-card); border-radius: var(--radius-ios); overflow: hidden; margin-bottom: 1.25rem; }
-        .ios-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .ios-list { background: var(--bg-card-inner); border-radius: 12px; overflow: hidden; margin-bottom: 1.25rem; border: 1px solid var(--border);}
+        .ios-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
         .ios-list-item:last-child { border-bottom: none; }
-        .ios-list-item .left-info { display: flex; flex-direction: column; gap: 2px; }
-        .ios-list-item .main-txt { font-weight: 600; }
+        .ios-list-item .left-info { display: flex; flex-direction: column; gap: 4px; }
+        .ios-list-item .main-txt { font-weight: 600; font-size: 15px;}
         .ios-list-item .sub-txt { font-size: 12px; color: var(--text-muted); }
-        .ios-list-item .right-val { font-family: monospace; font-weight: 600; text-align: right; font-size: 14px; }
+        .ios-list-item .right-val { font-family: monospace; font-weight: 700; text-align: right; font-size: 15px; }
 
-        /* Pulsanti Rotondi */
         .btn-round { 
             display: inline-block; width: 100%; padding: 14px; border-radius: var(--radius-round); 
             font-size: 15px; font-weight: 700; border: none; cursor: pointer; 
             text-align: center; transition: background 0.2s, transform 0.1s; background: var(--secondary); color: white;
         }
-        .btn-round:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-round:active { transform: scale(0.96); opacity: 0.9; }
         .btn-round.danger { background: var(--danger); }
-        .btn-round.success { background: var(--primary); }
-        .btn-round.accent { background: var(--accent); color: black; }
-
-        /* Input Form arrotondati */
+        .btn-round.success { background: var(--primary); color: #000; }
+        
         .ios-input-group { margin-bottom: 12px; }
-        .ios-input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-left: 4px; margin-bottom: 4px; text-transform: uppercase; }
-        .ios-input { width: 100%; padding: 12px 16px; background: var(--bg-card-inner); border: 1px solid var(--border); border-radius: var(--radius-ios); color: white; font-size: 14px; outline: none; }
-        .ios-input:focus { border-color: var(--secondary); }
+        .ios-input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-left: 4px; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;}
+        .ios-input { width: 100%; padding: 12px 16px; background: var(--bg-card-inner); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 15px; outline: none; transition: border-color 0.2s;}
+        .ios-input:focus { border-color: var(--primary); }
 
-        /* Grafici */
-        .chart-container { height: 160px; position: relative; margin-bottom: 10px; }
+        .chart-container { height: 180px; position: relative; margin-bottom: 10px; }
 
-        /* Mappa */
-        #map { width: 100%; height: 340px; border-radius: var(--radius-ios); border: 1px solid var(--border); margin-top: 10px; z-index: 1; }
+        /* Mappa Stile Chiaro */
+        #map { width: 100%; height: 360px; border-radius: 12px; border: 1px solid var(--border); margin-top: 10px; z-index: 1; }
 
-        /* AI Card */
-        .ai-bubble-box { background: var(--bg-card); border: 1px solid var(--secondary); padding: 1.25rem; border-radius: var(--radius-ios); font-size: 14px; line-height: 1.5; }
+        /* AI e Bandi Card */
+        .ai-bubble-box { background: var(--bg-card-inner); border: 1px solid var(--secondary); padding: 1.25rem; border-radius: 12px; font-size: 14px; line-height: 1.6; margin-bottom: 15px;}
         .ai-node { margin-bottom: 10px; padding-left: 18px; position: relative; color: var(--text-main); }
-        .ai-node::before { content: '•'; position: absolute; left: 0; color: var(--secondary); font-weight: bold; font-size: 16px; top: -2px; }
+        .ai-node::before { content: '✦'; position: absolute; left: 0; color: var(--secondary); font-weight: bold; font-size: 14px; top: 0px; }
+        
+        /* Stile link Bandi */
+        .bando-link { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 10px; text-decoration: none; color: var(--text-main); font-weight: 600; margin-bottom: 8px; border: 1px solid var(--border); transition: 0.2s;}
+        .bando-link:hover, .bando-link:active { background: rgba(255,255,255,0.1); border-color: var(--primary); }
+        .bando-tag { font-size: 10px; background: var(--primary); color: #000; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; font-weight: 800;}
 
-        /* BARRA DI NAVIGAZIONE IN BASSO (TAB BAR RIGIDA MINIMALE) */
+        /* TAB BAR IPHONE */
         .ios-tab-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
-            background: #111827; border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+            background: rgba(20, 20, 22, 0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border); display: flex; justify-content: space-around;
             padding-bottom: env(safe-area-inset-bottom); z-index: 999;
         }
         .ios-tab-item {
             background: none; border: none; color: var(--text-muted);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 600; cursor: pointer; padding: 4px 0; width: 20%; transition: color 0.15s;
+            font-size: 10px; font-weight: 600; cursor: pointer; padding: 6px 0; width: 20%; transition: color 0.15s;
         }
         .ios-tab-item.active { color: var(--primary); }
-        .ios-tab-icon-svg { width: 20px; height: 20px; margin-bottom: 4px; fill: currentColor; }
+        .ios-tab-icon-svg { width: 22px; height: 22px; margin-bottom: 5px; fill: currentColor; }
         
         .negative { color: var(--danger); }
         .positive { color: var(--primary); }
@@ -114,11 +126,12 @@
 
 <div class="container">
     <div class="ios-header">
+        <h1>GeoDash <span>Pro</span></h1>
         <div class="ios-subtitle" id="ios-view-ctx">Mese Corrente</div>
-        <h1 id="ios-main-title">Dashboard</h1>
     </div>
 
     <div id="panel-dashboard" class="section-panel active">
+        <h2 class="section-title">Dashboard</h2>
         <div class="ios-grid" id="dash-cards-grid"></div>
         
         <div class="ios-card">
@@ -137,8 +150,9 @@
     </div>
 
     <div id="panel-attivita" class="section-panel">
+        <h2 class="section-title">Attività Lavorativa</h2>
         <div class="ios-card">
-            <div class="ios-card-title" style="color: var(--secondary);">Nuova Giornata</div>
+            <div class="ios-card-title" style="color: var(--primary);">+ Nuova Giornata</div>
             <div class="ios-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="ios-input-group"><label>Data</label><input type="date" id="inp-data" class="ios-input"></div>
                 <div class="ios-input-group"><label>Località</label><input type="text" id="inp-luogo" placeholder="Es. Scandiano" class="ios-input"></div>
@@ -163,32 +177,35 @@
         </div>
 
         <div class="ios-card">
-            <div class="ios-card-title">Attività del Mese</div>
+            <div class="ios-card-title">Cronologia del Mese</div>
             <div class="ios-list" id="activity-ios-list"></div>
         </div>
     </div>
 
     <div id="panel-mappa" class="section-panel">
+        <h2 class="section-title">Ubicazione Geografica</h2>
         <div class="ios-card">
-            <div class="ios-card-title">Ubicazione Attività</div>
+            <div class="ios-card-title">Mappa delle Trasferte</div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">Visualizzazione su cartografia chiara delle sedi lavorative in base alle località inserite.</p>
             <div id="map"></div>
         </div>
     </div>
 
     <div id="panel-impostazioni" class="section-panel">
+        <h2 class="section-title">Impostazioni</h2>
         <div class="ios-card">
             <div class="ios-card-title">Archivio e Backup</div>
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <button class="btn-round success" onclick="archiveMonth()">Archivia Mese Attuale</button>
-                <button class="btn-round" onclick="exportToCSV()">Esporta Dati (CSV)</button>
+                <button class="btn-round" onclick="exportToCSV()">Esporta Tutto in Excel (CSV)</button>
             </div>
         </div>
 
         <div class="ios-card">
             <div class="ios-card-title">Parametri Fiscali</div>
-            <div class="ios-input-group"><label>Coefficiente Redditività (%)</label><input type="number" id="p-coeff" value="78" class="ios-input" onchange="saveParams()"></div>
+            <div class="ios-input-group"><label>Coefficiente Redditività Forfettario (%)</label><input type="number" id="p-coeff" value="78" class="ios-input" onchange="saveParams()"></div>
             <div class="ios-input-group"><label>Imposta Sostitutiva (%)</label><input type="number" id="p-tasse" value="5" class="ios-input" onchange="saveParams()"></div>
-            <div class="ios-input-group"><label>Contributo CIPAG (%)</label><input type="number" id="p-cipag" value="12" class="ios-input" onchange="saveParams()"></div>
+            <div class="ios-input-group"><label>Contributo Cassa CIPAG (%)</label><input type="number" id="p-cipag" value="12" class="ios-input" onchange="saveParams()"></div>
             <div class="ios-input-group"><label>Commercialista Mensile (€)</label><input type="number" id="p-comm" value="60" class="ios-input" onchange="saveParams()"></div>
             <div class="ios-input-group"><label>Quota Ordine Mensile (€)</label><input type="number" id="p-ordine" value="15.42" class="ios-input" onchange="saveParams()"></div>
         </div>
@@ -200,33 +217,66 @@
     </div>
 
     <div id="panel-ai" class="section-panel">
+        <h2 class="section-title">Intelligence & Opportunità</h2>
+        
+        <div class="ios-card" style="border-color: var(--primary);">
+            <div class="ios-card-title" style="color: var(--primary);">Radar Bandi & Concorsi</div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height: 1.5;">
+                Scannerizza le ultime opportunità pubbliche, gare d'appalto e concorsi per Geologi.
+            </p>
+            
+            <a href="https://www.inpa.gov.it/" target="_blank" class="bando-link">
+                <div>Portale del Reclutamento (inPA)<br><span style="font-size:11px; color:var(--text-muted); font-weight:500;">Concorsi Nazionali e Regionali</span></div>
+                <span class="bando-tag">Ufficiale</span>
+            </a>
+            
+            <a href="https://www.cngeologi.it/category/bandi-e-concorsi/" target="_blank" class="bando-link">
+                <div>Consiglio Nazionale Geologi<br><span style="font-size:11px; color:var(--text-muted); font-weight:500;">Bacheca Appalti e Concorsi (CNG)</span></div>
+                <span class="bando-tag">Albo</span>
+            </a>
+            
+            <a href="https://www.gazzettaufficiale.it/concorsi" target="_blank" class="bando-link">
+                <div>Gazzetta Ufficiale (Serie Speciale)<br><span style="font-size:11px; color:var(--text-muted); font-weight:500;">Gazzetta Concorsi ed Esami</span></div>
+                <span class="bando-tag">Stato</span>
+            </a>
+            
+            <a href="https://www.telemat.it/bandi-di-gara/geologia-e-geotecnica" target="_blank" class="bando-link">
+                <div>Telemat Appalti Geologia<br><span style="font-size:11px; color:var(--text-muted); font-weight:500;">Gare d'appalto private e pubbliche</span></div>
+                <span class="bando-tag">Gare</span>
+            </a>
+
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 15px; font-style: italic; border-top: 1px solid var(--border); padding-top: 10px;">
+                Nota dell'AI: Essendo quest'app salvata in locale offline per la tua privacy, usa i link rapidi superiori per accedere alle bacheche aggiornate in tempo reale dai portali ufficiali.
+            </div>
+        </div>
+
         <div class="ios-card">
-            <div class="ios-card-title">Analisi Suggerimenti AI</div>
+            <div class="ios-card-title" style="color: var(--secondary);">Analisi Fiscale AI</div>
             <div class="ai-bubble-box" id="ai-insights-box">Aggiungere attività correnti per elaborare l'analisi dei parametri.</div>
         </div>
     </div>
 </div>
 
 <div class="ios-tab-bar">
-    <button class="ios-tab-item active" onclick="navTo('panel-dashboard', 'Dashboard', this)">
+    <button class="ios-tab-item active" onclick="navTo('panel-dashboard', this)">
         <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
         <div>Dashboard</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-attivita', 'Attività', this)">
+    <button class="ios-tab-item" onclick="navTo('panel-attivita', this)">
         <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         <div>Attività</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-mappa', 'Mappa', this); initMapOnce();">
+    <button class="ios-tab-item" onclick="navTo('panel-mappa', this); initMapOnce();">
         <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
         <div>Mappa</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-impostazioni', 'Configurazione', this)">
+    <button class="ios-tab-item" onclick="navTo('panel-impostazioni', this)">
         <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         <div>Config</div>
     </button>
-    <button class="ios-tab-item" onclick="navTo('panel-ai', 'Intelligence', this)">
+    <button class="ios-tab-item" onclick="navTo('panel-ai', this)">
         <svg class="ios-tab-icon-svg" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm1-6h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
-        <div>AI</div>
+        <div>Opportunità</div>
     </button>
 </div>
 
@@ -241,7 +291,7 @@ let mapMarkers = [];
 
 const FALLBACK_DATA = [
   {data:"2026-05-01",luogo:"Reggio Emilia",tipo:"Trasferta",oraInizio:"08:00",oraFine:"17:00",compenso:105,extra:20,spese:5},
-  {data:"2026-05-12",luogo:"Modena Centro",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:0}
+  {data:"2026-05-12",luogo:"Modena",tipo:"Ufficio",oraInizio:"09:00",oraFine:"18:00",compenso:105,extra:8,spese:0}
 ];
 
 function calcolaOre(inizio, fine) {
@@ -257,12 +307,11 @@ function formatOre(ore) {
     return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
-function navTo(panelId, titleText, btnEl) {
+function navTo(panelId, btnEl) {
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.ios-tab-item').forEach(t => t.classList.remove('active'));
     document.getElementById(panelId).classList.add('active');
     btnEl.classList.add('active');
-    document.getElementById('ios-main-title').innerText = titleText;
     if(panelId === 'panel-impostazioni') renderArchive();
 }
 
@@ -384,10 +433,12 @@ window.saveParams = function() {
     render(); saveToStorage();
 }
 
+// Inizializzazione Mappa con tile CHIARI
 function initMapOnce() {
     if (map !== null) { setTimeout(() => { map.invalidateSize(); }, 200); return; }
     map = L.map('map').setView([42.8, 12.5], 5);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+    // URL modificato da dark_all a light_all per una mappa bianca/chiara
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
     updateMapMarkers();
 }
 
@@ -449,7 +500,7 @@ window.loadArchive = function(idx) {
     entries = [...archive[idx].dati];
     viewName = archive[idx].nome + " (Archivio)";
     render();
-    navTo('panel-dashboard', 'Dashboard', document.querySelector('.ios-tab-bar').children[0]);
+    navTo('panel-dashboard', document.querySelector('.ios-tab-bar').children[0]);
 }
 
 window.deleteArchive = function(index) {
@@ -471,13 +522,13 @@ function generateAIInsights(d) {
     const box = document.getElementById('ai-insights-box');
     if(entries.length === 0) return;
     const pNetta = d.totalOre > 0 ? (d.netto / d.totalOre) : 0;
-    let html = `<div class="ai-node"><b>Efficienza Oraria:</b> Generi un netto reale netto-tasse di <b>€ ${pNetta.toFixed(2)}/ora</b>.</div>`;
-    html += `<div class="ai-node"><b>Distribuzione Territoriale:</b> Svolgi attività in <b>${Object.keys(entries.reduce((acc,curr)=>{acc[curr.luogo]=1;return acc;},{})).length} località esterne</b> diverse questo mese. Accorpare i viaggi riduce l'incidenza di spese non deducibili.</div>`;
+    let html = `<div class="ai-node"><b>Efficienza Oraria:</b> Il netto reale al netto di tasse e costi è di <b>€ ${pNetta.toFixed(2)}/ora</b>.</div>`;
+    html += `<div class="ai-node"><b>Incidenza Spese:</b> Le spese vive rappresentano il <b>${d.lordoFatturabile>0 ? ((d.speseVive/d.lordoFatturabile)*100).toFixed(1) : 0}%</b> del fatturato lordo. Fai attenzione ai rimborsi carburante nel forfettario.</div>`;
     box.innerHTML = html;
 }
 
 function updateCharts(d) {
-    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#1f2937' } }, x: { ticks: { color: '#9ca3af' }, grid: { display: false } } } };
+    const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#27272a' } }, x: { ticks: { color: '#9ca3af' }, grid: { display: false } } } };
     if(charts.b) charts.b.destroy(); if(charts.d) charts.d.destroy();
     
     const sorted = [...entries].sort((a,b) => new Date(a.data) - new Date(b.data));

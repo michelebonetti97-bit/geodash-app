@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>GeoDash Pro</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <style>
         :root {
             --bg-main: #000000;
             --bg-card: #111827;
             --primary: #10b981;
-            --secondary: #3b82f6;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border: #374151;
@@ -21,30 +16,34 @@
         * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 100px; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        
         .section-panel { display: none; }
         .section-panel.active { display: block; }
+        
         .card { background: var(--bg-card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
+        
         .ios-input { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); border-radius: 8px; color: white; margin-bottom: 10px; }
-        .result-box { background: var(--primary); color: #000; padding: 15px; border-radius: 8px; font-weight: 800; text-align: center; margin-top: 10px; }
-        .tab-bar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 20px; border-top: 1px solid var(--border); }
-        .tab-item { cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 700; }
+        .result-box { background: var(--primary); color: #000; padding: 15px; border-radius: 8px; font-weight: 800; text-align: center; margin-top: 10px; font-size: 1.2rem; }
+        
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border); z-index: 1000; }
+        .tab-item { cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 700; text-align: center; }
         .tab-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="margin-bottom:20px;"><h1>GeoDash <span style="color:var(--primary)">Pro</span></h1></div>
+    <h1 style="margin-bottom:20px;">GeoDash <span style="color:var(--primary)">Pro</span></h1>
 
     <div id="panel-toolbox" class="section-panel active">
         <div class="card">
-            <div class="card-title">Calcolatore Parcelle</div>
+            <div class="card-title">Calcolatore Parcelle Tecniche</div>
             <select id="tool-type" class="ios-input" onchange="calcParcella()">
                 <optgroup label="Geofisica">
                     <option value="150">HVSR</option>
                     <option value="400">MASW / ReMi</option>
-                    <option value="800">ERT (Tomografia)</option>
+                    <option value="500">FDEM / ERT</option>
                 </optgroup>
                 <optgroup label="Geotecnica">
                     <option value="350">CPT / CPTU</option>
@@ -54,14 +53,14 @@
                     <option value="600">Relazione Idrogeologica</option>
                 </optgroup>
             </select>
-            <input type="number" id="tool-qty" class="ios-input" placeholder="Numero punti/indagini" oninput="calcParcella()">
+            <input type="number" id="tool-qty" class="ios-input" placeholder="Quantità (n° punti/indagini)" oninput="calcParcella()">
             <div class="result-box" id="result-price">Stima: € 0</div>
         </div>
     </div>
 
     <div id="panel-ai" class="section-panel">
         <div class="card">
-            <div class="card-title">Radar Bandi</div>
+            <div class="card-title">Radar Opportunità</div>
             <a href="https://www.inpa.gov.it/" class="ios-input" style="display:block; text-decoration:none;">inPA Concorsi ↗</a>
             <a href="https://www.cngeologi.it/category/bandi-e-concorsi/" class="ios-input" style="display:block; text-decoration:none;">CNG Bandi ↗</a>
         </div>
@@ -82,9 +81,9 @@
     }
 
     function calcParcella() {
-        const type = parseInt(document.getElementById('tool-type').value);
+        const val = document.getElementById('tool-type').value;
         const qty = parseInt(document.getElementById('tool-qty').value) || 0;
-        const total = type * qty;
+        const total = parseInt(val) * qty;
         document.getElementById('result-price').innerText = `Stima: € ${total}`;
     }
 </script>

@@ -5,35 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="GeoDash">
-    
     <title>GeoDash Pro</title>
-    
-    <link rel="apple-touch-icon" href="icon-180.png">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        /* INSERISCI QUI IL TUO CSS 
+           Consiglio: usa :root per gestire facilmente i colori
+        */
+        :root { --primary: #10b981; --bg-main: #050505; }
+        body { background: var(--bg-main); color: white; font-family: -apple-system, sans-serif; }
+        /* ... resto del tuo CSS ... */
+    </style>
 </head>
 <body>
 
-    <div class="container" style="padding-top: constant(safe-area-inset-top); padding-top: env(safe-area-inset-top);">
-        
+    <div class="container">
         <header class="ios-header">
             <h1>GeoDash <span>Pro</span></h1>
-            <div class="ios-subtitle" id="ios-view-ctx">Mese Corrente</div>
         </header>
 
         <main id="app-content">
             </main>
-
     </div>
 
     <nav class="ios-tab-bar">
         </nav>
 
     <script>
-        // Inserisci qui la tua logica JS
+        // INSERISCI QUI IL TUO JAVASCRIPT
+        // Assicurati di mantenere la funzione loadFromStorage()
     </script>
 </body>
 </html>
